@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html,
 body {
   padding: 0;
@@ -24,3 +28,42 @@ a {
     background: black;
   }
 }
+
+input[type="checkbox"]:checked{
+  background-color: #6157A0;
+}
+input:focus{
+  outline: none !important;
+}
+
+/* .backgroundDiv{
+  background-image: url("https://images.pexels.com/photos/4427622/pexels-photo-4427622.jpeg?auto=compress&cs=tinysrgb&h=650&w=940");
+  width: 50%;
+  height: 100vh;
+  object-fit: cover;
+  background-repeat: no-repeat;
+} */
+.container {
+  display: grid;
+}
+
+.content, .overlay {
+  grid-area: 1 / 1;
+}
+
+
+/* ::-webkit-scrollbar {
+  width: 10px;
+  max-height: 8px;
+}
+  ::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+  ::-webkit-scrollbar-thumb {
+  background: #afb4b4; 
+    border-radius:10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  
+  background: #afb4b4; 
+}  */
