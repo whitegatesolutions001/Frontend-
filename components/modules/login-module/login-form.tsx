@@ -1,7 +1,10 @@
+import { AxiosError } from 'axios';
 import Link from 'next/link';
 import React from 'react';
+import { postAxiosRequest } from '../../../utils/axios-requests';
 import { ErrorInterfaceObj, LoginDetailsInterface } from '../../../utils/constants';
 import { validateEmail, validatePassword } from '../../../utils/util-functions';
+import { ReactSpinnerLoader } from '../../shared-components/react-spinner-loader';
 
 const initialState :LoginDetailsInterface = {
     email : '',
@@ -18,6 +21,7 @@ export const LoginForm = () : JSX.Element => {
     const [emailError, setEmailError] = React.useState<ErrorInterfaceObj>(initialErrorObj);
     const [passwordError, setPasswordError] = React.useState<ErrorInterfaceObj>(initialErrorObj);
     const [rememberMe, setRememberMe] = React.useState<boolean>(false);
+    const [loader, setLoaderState] = React.useState<boolean>(false);
 
 
     const emailOnchangeHandler = ({target} : React.ChangeEvent<HTMLInputElement>) => {
@@ -42,9 +46,39 @@ export const LoginForm = () : JSX.Element => {
         );
     }
     
-    const onSubmitHandler = (e : React.SyntheticEvent<HTMLFormElement>) => {
+    const onSubmitHandler = async (e : React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log(loginDetails);
+        const loginRequestObject = {
+            uri : 'auth/login',
+            body : {
+                email : loginDetails.email,
+                password : loginDetails.password
+            }
+        } ;
+        setLoaderState(true);
+        await postAxiosRequest(loginRequestObject)
+        .then((response) => {
+            const {data, success, message, code} = response.data;
+            if(success && code === 200){
+                setLoaderState(false);
+                const {token, tokenInitializationDate,tokenExpiryDate,userId} = data;
+
+                if(token && userId){
+                     //logic of where to store token as well as implementing app flow here
+                    alert(message);
+                }
+               
+            }
+        }).catch((error : AxiosError) => {
+            if(error.isAxiosError){
+                setLoaderState(false);
+                const {data : {success, message, code} } = error.response as any;
+                if(!success && code !== 200){
+                    alert(message);
+                }
+            }
+        })
     }
     React.useEffect(() =>{},[loginDetails]);
 
@@ -112,6 +146,7 @@ export const LoginForm = () : JSX.Element => {
                     </div>
                 </div>
             </div>
+            {loader && <ReactSpinnerLoader/>}
         </div>
     );
 }
