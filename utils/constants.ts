@@ -1,5 +1,6 @@
 export enum Constants {
-    GIRL_LAWYER = "https://images.pexels.com/photos/4427622/pexels-photo-4427622.jpeg?auto=compress&cs=tinysrgb&w=1280&h=1918&dpr=1"
+    GIRL_LAWYER = "https://images.pexels.com/photos/4427622/pexels-photo-4427622.jpeg?auto=compress&cs=tinysrgb&w=1280&h=1918&dpr=1",
+    HOST_ADDRESS = "https://registreee.herokuapp.com/" 
 }
 
 export type ThemeContextState = {
@@ -21,4 +22,9 @@ export interface SignPersonInterface{
 export interface ErrorInterfaceObj{
     msg : string;
     isError : boolean;
+}
+
+export interface AxiosRequestInterface{
+    uri : string;
+    body ?: any;
 }

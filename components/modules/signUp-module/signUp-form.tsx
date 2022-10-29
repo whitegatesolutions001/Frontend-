@@ -1,7 +1,10 @@
+import { AxiosError } from 'axios';
 import Link from 'next/link';
 import React, {useState, useEffect} from 'react';
-import { ErrorInterfaceObj, SignPersonInterface } from '../../../utils/constants';
+import { postAxiosRequest } from '../../../utils/axios-requests';
+import { AxiosRequestInterface, ErrorInterfaceObj, SignPersonInterface } from '../../../utils/constants';
 import { validateEmail, validatePassword, validatePhoneNumber } from '../../../utils/util-functions';
+import { ReactSpinnerLoader } from '../../shared-components/react-spinner-loader';
 
 
 const initialState : SignPersonInterface = {
@@ -26,7 +29,7 @@ export const SignUpForm = () : JSX.Element => {
     const [passwordError,setPasswordError] = useState<ErrorInterfaceObj>({...initialErrorObj});
     const [confirmPasswordError,setConfirmPasswordError] = useState<ErrorInterfaceObj>({...initialErrorObj});
     const [tempPassword, setTempPassword] = useState<string>('');
-    const [releaseButton, setButtonRelease] = useState({release : false, checked : false});
+    const [releaseButton, setButtonRelease] = useState({loader : false, checked : false});
 
     const firstNameOnchangeHandler = ({target} : React.ChangeEvent<HTMLInputElement>) => {
         const {value} = target;
@@ -83,9 +86,44 @@ export const SignUpForm = () : JSX.Element => {
         else setConfirmPasswordError({...passwordError,msg: "Passwords do not match", isError : true});
     }
 
-    const onSignUpFormSubmitHandler = (e : React.SyntheticEvent<HTMLFormElement>) => {
+    const onSignUpFormSubmitHandler = async (e : React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(personState);
+        const {firstName, lastName, email, phoneNumber, password} = personState;
+        const axiosRequestObject : AxiosRequestInterface = {
+            uri : 'user/sign-up',
+            body : {
+                firstName,
+                lastName,
+                email,
+                phoneNumber,
+                password,
+                role : "CUSTOMER"
+            }
+        }
+        setButtonRelease({...releaseButton, loader : true});
+        await postAxiosRequest(axiosRequestObject).then((response) => {
+            const {data, code, success,message} = response.data;
+            
+            if(success && code === 200){
+                const { token,tokenExpiryDate,tokenInitializationDate,userId } = data;
+                if(token && userId){
+                    //display successful message, then proceed to new registration
+                    setButtonRelease({...releaseButton, loader : false});
+                    alert(message);
+                }
+            }
+ 
+        }).catch((error : AxiosError) => {
+            if(error?.isAxiosError){
+                const {success, code ,message} = error.response?.data as any;
+
+                if(!success && code !== 200){
+                    //handle error
+                    setButtonRelease({...releaseButton, loader : false});
+                    alert(message);
+                }
+            }
+        });
     }
     useEffect(() => {
         if(tempPassword !== personState.password){
@@ -201,6 +239,7 @@ export const SignUpForm = () : JSX.Element => {
                     </div>
                 </div>
             </div>
+            {releaseButton.loader && <ReactSpinnerLoader/>}
         </div>
     );
 }
