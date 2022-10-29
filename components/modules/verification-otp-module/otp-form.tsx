@@ -52,13 +52,13 @@ export const OTPForm = () : JSX.Element => {
                     </IconButton>
                 </div>
 
-                <div className='my-32'>
-                    <p className='text-4xl text-[#303030] font-bold py-2 capitalize'>Verification</p>
-                    <p className='text-lg text-[#303030] font-semibold'>Please type in the One-Time password sent to your email</p>
+                <div className='my-24'>
+                    <p className='text-4xl font-bold py-2 capitalize'>Verification</p>
+                    <p className='text-lg font-semibold'>Please type in the One-Time password sent to your email</p>
 
                     <form>
                     
-                        <div className='w-full flex flex-row gap-2 md:gap-4 lg:gap-8 items-center'>
+                        <div className='w-full flex flex-row gap-2 md:gap-4 lg:gap-6 xl:gap-8 items-center'>
                         {
                         otp && otp.map((_, index : number) =>
 

@@ -8,6 +8,8 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    /* background-color: #fff; */
+    /* background-color: #fff; */
 }
 
 a {
@@ -24,8 +26,20 @@ a {
     color-scheme: dark;
   }
   body {
-    color: white;
+    color: #eee;
     background: black;
+  }
+  input[type="text"]{
+    background-color: darkgray;
+  }
+  input[type="email"]{
+    background-color: darkgray;
+  }
+  input[type="password"]{
+    background-color: darkgray;
+  }
+  input::placeholder{
+    color: lightgray;
   }
 }
 
@@ -49,6 +63,28 @@ input:focus{
 
 .content, .overlay {
   grid-area: 1 / 1;
+}
+
+.dark{
+  background-color: #303030;
+  color: #eee;
+}
+.dark input[type="text"]{
+  background-color: darkgray;
+}
+.dark input[type="email"]{
+  background-color: darkgray;
+}
+.dark input[type="password"]{
+  background-color: darkgray;
+}
+.dark input::placeholder{
+  color: lightgray;
+}
+
+.light{
+  background-color: #fff;
+  color: #303030;
 }
 
 
