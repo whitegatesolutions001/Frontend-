@@ -5,6 +5,7 @@ import { postAxiosRequest } from '../../../utils/axios-requests';
 import { Constants, ErrorInterfaceObj, LoginDetailsInterface } from '../../../utils/constants';
 import { validateEmail, validatePassword } from '../../../utils/util-functions';
 import { ReactSpinnerLoader } from '../../shared-components/react-spinner-loader';
+import { useRouter, NextRouter} from 'next/router';
 
 const initialState :LoginDetailsInterface = {
     email : '',
@@ -22,6 +23,7 @@ export const LoginForm = () : JSX.Element => {
     const [passwordError, setPasswordError] = React.useState<ErrorInterfaceObj>(initialErrorObj);
     const [rememberMe, setRememberMe] = React.useState<boolean>(false);
     const [loader, setLoaderState] = React.useState<boolean>(false);
+    const router : NextRouter = useRouter();
 
 
     const emailOnchangeHandler = ({target} : React.ChangeEvent<HTMLInputElement>) => {
@@ -66,7 +68,13 @@ export const LoginForm = () : JSX.Element => {
 
                 if(token && userId){
                      //logic of where to store token as well as implementing app flow here
+                     localStorage.setItem('token', token);
+                     localStorage.setItem('userId', userId);
+                     localStorage.setItem('tokenInitializationDate',tokenInitializationDate);
+                     localStorage.setItem('tokenExpiryDate',tokenExpiryDate);
+                     localStorage.setItem('message', "LogIn successFul");
                     alert(message);
+                    router.push('/view-status');
                 }
                
             }

@@ -11,7 +11,7 @@ export const postAxiosRequest = async (value : AxiosRequestInterface) => {
     });
 }
 
-function getToken(token: any): string {
+export function getToken(token: any): string {
 	if (token !== null) {
 		return token;
 	}

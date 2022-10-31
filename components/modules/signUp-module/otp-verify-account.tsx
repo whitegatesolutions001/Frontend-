@@ -4,7 +4,7 @@ import KeyboardDoubleArrowLeftRoundedIcon from '@mui/icons-material/KeyboardDoub
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import {NextRouter, useRouter} from 'next/router';
 import Link from 'next/link';
-import { getAxiosRequestWithAuthorizationHeader } from '../../../utils/axios-requests';
+import { getAxiosRequest, getAxiosRequestWithAuthorizationHeader } from '../../../utils/axios-requests';
 import { AxiosError } from 'axios';
 import { ReactSpinnerLoader } from '../../shared-components/react-spinner-loader';
 
@@ -19,6 +19,7 @@ export const SignUpOtpComponent = () : JSX.Element => {
    // const [stringOtp, setOTPString]  = useState<string>("");
     const [activeOtpIndex, setActiveOtpIndex] = React.useState<number>(0);
     const [loader, setLoaderState] = React.useState<boolean>(false);
+    const [resendLoader, setLoader] = React.useState<boolean>(false);
 
     const otpRef : React.MutableRefObject<any> = React.useRef(null);
 
@@ -74,7 +75,8 @@ export const SignUpOtpComponent = () : JSX.Element => {
             if(success && code === 200){
                 setLoaderState(false);
                 alert(message);
-                //router.push('/'); dashboard
+                localStorage.setItem('message', "You have successfully created and verified your account");
+                router.push('/view-status');
             }
         }).catch((error : AxiosError) => {
             setLoaderState(false);
@@ -86,11 +88,37 @@ export const SignUpOtpComponent = () : JSX.Element => {
             }
         })
     }
+
+    const onClickResendOTPHandler = async() => {
+        
+        let userId :string|null = localStorage.getItem('userId');
+
+        const resendOtpObject = {
+            uri : `user/resend-otp-code/${userId && userId}`
+        }
+        setLoader(true);
+        await getAxiosRequest(resendOtpObject.uri)
+        .then((response) => {
+            const {success, message, code} = response.data;
+
+            if(success && code === 200){
+                setLoader(false);
+                alert(message);
+            }
+        }).catch((err : AxiosError) => {
+            setLoader(false);
+            if(err?.isAxiosError){
+                const {data : {success, code, message}} = err.response as any;
+                if(!success && code !== 200){
+                    alert(message);
+                }
+            }
+        });
+    }
     React.useEffect(() => {
         otpRef.current?.focus();
 
     },[activeOtpIndex]);
-
 
 
     return(
@@ -135,15 +163,16 @@ export const SignUpOtpComponent = () : JSX.Element => {
 
                     <div className='text-center p-4 text-sm'>
                         <p>Did&apos;nt get a One-Time password?&nbsp;
-                        <Link href={'/otp-verification'} passHref>
-                            <span className='text-[#6157A0] hover:underline cursor-pointer font-bold'>ResendOTP</span>
-                        </Link>
+                        <button className='text-[#6157A0] font-bold border-none hover:underline' onClick={onClickResendOTPHandler}>
+                            <span>ResendOTP</span>
+                        </button>
                         </p>
                         
                     </div>
                     
                 </div>
                 {loader && <ReactSpinnerLoader/>}
+                {resendLoader && <ReactSpinnerLoader/>}
             </div>
 
         </div>

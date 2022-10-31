@@ -19,6 +19,7 @@ export const OTPForm = () : JSX.Element => {
    // const [stringOtp, setOTPString]  = useState<string>("");
     const [activeOtpIndex, setActiveOtpIndex] = React.useState<number>(0);
     const [loader, setLoaderState] = React.useState<boolean>(false);
+    const [resendLoader, setLoader] = React.useState<boolean>(false);
 
     const otpRef : React.MutableRefObject<any> = React.useRef(null);
 
@@ -88,6 +89,33 @@ export const OTPForm = () : JSX.Element => {
             }
         })
     }
+
+    const onClickResendOTPHandler = async() => {
+        
+        let userId :string|null = localStorage.getItem('userId');
+
+        const resendOtpObject = {
+            uri : `user/resend-otp-code/${userId && userId}`
+        }
+        setLoader(true);
+        await getAxiosRequest(resendOtpObject.uri)
+        .then((response) => {
+            const {success, message, code} = response.data;
+
+            if(success && code === 200){
+                setLoader(false);
+                alert(message);
+            }
+        }).catch((err : AxiosError) => {
+            setLoader(false);
+            if(err?.isAxiosError){
+                const {data : {success, code, message}} = err.response as any;
+                if(!success && code !== 200){
+                    alert(message);
+                }
+            }
+        });
+    }
     React.useEffect(() => {
         otpRef.current?.focus();
 
@@ -137,15 +165,16 @@ export const OTPForm = () : JSX.Element => {
 
                     <div className='text-center p-4 text-sm'>
                         <p>Did&apos;nt get a One-Time password?&nbsp;
-                        <Link href={'/otp-verification'} passHref>
-                            <span className='text-[#6157A0] hover:underline cursor-pointer font-bold'>ResendOTP</span>
-                        </Link>
+                        <button className='text-[#6157A0] hover:underline cursor-pointer font-bold border-none' onClick={onClickResendOTPHandler}>
+                            <span>ResendOTP</span>
+                        </button>
                         </p>
                         
                     </div>
                     
                 </div>
                 {loader && <ReactSpinnerLoader/>}
+                {resendLoader && <ReactSpinnerLoader/>}
             </div>
 
         </div>
