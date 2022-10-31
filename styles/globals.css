@@ -39,12 +39,12 @@ a {
     background-color: darkgray;
   }
   input::placeholder{
-    color: lightgray;
+    color: #303030;
   }
 }
 
 input[type="checkbox"]:checked{
-  background-color: #6157A0;
+  accent-color: #6157A0;
 }
 input:focus{
   outline: none !important;
@@ -66,10 +66,10 @@ input:focus{
 }
 
 .dark{
-  background-color: #303030;
-  color: #eee;
+  background-color: darkgray;
+  color: #303030;
 }
-.dark input[type="text"]{
+/* .dark input[type="text"]{
   background-color: darkgray;
 }
 .dark input[type="email"]{
@@ -79,8 +79,8 @@ input:focus{
   background-color: darkgray;
 }
 .dark input::placeholder{
-  color: lightgray;
-}
+  color: #fff;
+} */
 
 .light{
   background-color: #fff;

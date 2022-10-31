@@ -1,7 +1,11 @@
+import { AxiosError } from 'axios';
 import Link from 'next/link';
 import React from 'react';
-import { ErrorInterfaceObj } from '../../../utils/constants';
-import { validateEmail, validatePassword } from '../../../utils/util-functions';
+import { postAxiosRequest } from '../../../utils/axios-requests';
+import { AxiosRequestInterface, Constants, ErrorInterfaceObj } from '../../../utils/constants';
+import { validatePassword } from '../../../utils/util-functions';
+import { useRouter, NextRouter } from 'next/router';
+import { ReactSpinnerLoader } from '../../shared-components/react-spinner-loader';
 
 const initialErrorObj : ErrorInterfaceObj = {
     msg : '',
@@ -18,6 +22,8 @@ export const ResetPasswordForm = () : JSX.Element => {
     const [temporaryPasswordError, setTempPassword] = React.useState<ErrorInterfaceObj>({...initialErrorObj});
     const [newPassword, setNewPassword] = React.useState<ErrorInterfaceObj>({...initialErrorObj});
     const [confirmPassword, setConfirmPassword] = React.useState<ErrorInterfaceObj>({...initialErrorObj});
+    const [loader, setLoaderState] =  React.useState<boolean>(false);
+    const router : NextRouter = useRouter();
 
     const onChangeTemporaryPasswordHandler = ({target} : React.ChangeEvent<HTMLInputElement>) => {
         const {value} = target;
@@ -25,7 +31,7 @@ export const ResetPasswordForm = () : JSX.Element => {
             setPassword({...password, temporaryPassword : value});
            setTempPassword({...temporaryPasswordError, isError : false}); 
         }else {
-            setTempPassword({...temporaryPasswordError, msg : 'Password length must be at least 8 characters, must contain upper and lowercase alphabets,special character', isError : true}); 
+            setTempPassword({...temporaryPasswordError, msg : Constants.PASSWORD_REQUIREMENT, isError : true}); 
         } 
     }
 
@@ -47,11 +53,79 @@ export const ResetPasswordForm = () : JSX.Element => {
             setConfirmPassword({...confirmPassword, msg : 'Passwords do not match', isError : true}); 
         } 
     }
-    const onSubmitHandler = (e : React.SyntheticEvent<HTMLFormElement>) => {
+    // const onSubmitHandler = async (e : React.SyntheticEvent<HTMLFormElement>) => {
+    //     e.preventDefault();
+    //     console.log(password);
+    //     const {temporaryPassword, newPassword, confirmNewPassword} = password;
+
+    //     const resetPasswordRequestObj : AxiosRequestInterface = {
+    //         uri : 'user/change-account-password',
+    //         body : {
+    //             currentPassword : temporaryPassword,
+    //             newPassword : newPassword === confirmNewPassword && confirmNewPassword
+    //         }
+    //     };
+    //     console.log(resetPasswordRequestObj);
+    //     setLoaderState(true);
+        
+    //     await postAxiosRequest(resetPasswordRequestObj)
+    //     .then((response) => {
+
+    //         const {success, message, code} = response.data;
+    //         if(success && code === 200){
+    //             setLoaderState(false);
+    //             alert(message);
+    //             router.push('/login');
+    //         }
+
+    //     }).catch((error : AxiosError) => {
+    //         if(error.isAxiosError){
+    //             setLoaderState(false);
+    //             const {data : {success, message, code} } = error.response as any;
+    //             if(!success && code !== 200){
+    //                 alert(message);
+    //             }
+    //         }
+    //     });
+    // }
+    
+    const onSubmitHandler = async (e : React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log(password);
+        const uniqueCode : string | null = localStorage.getItem('unique');
+     
+        const {newPassword, confirmNewPassword} = password;
+
+        const resetPasswordRequestObj : AxiosRequestInterface = {
+            uri : 'user/verification/change-password',
+            body : {
+                uniqueVerificationCode : uniqueCode && uniqueCode,
+                newPassword : newPassword === confirmNewPassword && confirmNewPassword
+            }
+        };
+        console.log(resetPasswordRequestObj);
+        setLoaderState(true);
+        
+        await postAxiosRequest(resetPasswordRequestObj)
+        .then((response) => {
+
+            const {success, message, code} = response.data;
+            if(success && code === 200){
+                setLoaderState(false);
+                alert(message);
+                router.push('/login');
+            }
+
+        }).catch((error : AxiosError) => {
+            if(error.isAxiosError){
+                setLoaderState(false);
+                const {data : {success, message, code} } = error.response as any;
+                if(!success && code !== 200){
+                    alert(message);
+                }
+            }
+        });
     }
-    
     React.useEffect(() => {
         if(password.confirmNewPassword && password.newPassword !== password.confirmNewPassword){
             setConfirmPassword({...confirmPassword, msg : 'Passwords do not match', isError : true}); 
@@ -125,6 +199,7 @@ export const ResetPasswordForm = () : JSX.Element => {
                     </div>
                 </div>
             </div>
+            {loader && <ReactSpinnerLoader/>}
         </div>
     );
 }

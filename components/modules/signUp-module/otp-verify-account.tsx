@@ -4,14 +4,14 @@ import KeyboardDoubleArrowLeftRoundedIcon from '@mui/icons-material/KeyboardDoub
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import {NextRouter, useRouter} from 'next/router';
 import Link from 'next/link';
-import { getAxiosRequest } from '../../../utils/axios-requests';
+import { getAxiosRequestWithAuthorizationHeader } from '../../../utils/axios-requests';
 import { AxiosError } from 'axios';
 import { ReactSpinnerLoader } from '../../shared-components/react-spinner-loader';
 
 let currentOTPIndex : number = 0;
 let otpString : string = '';
 
-export const OTPForm = () : JSX.Element => {
+export const SignUpOtpComponent = () : JSX.Element => {
 
     const router : NextRouter = useRouter();
 
@@ -60,23 +60,21 @@ export const OTPForm = () : JSX.Element => {
         return isFull;
     } 
 
-    const onSubmitHandlerForForgotPassword = async(e : React.SyntheticEvent<HTMLFormElement>) => {
+
+    const onSubmitHandlerSignUpForm = async(e : React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log(otpString);
         const sendOtpRequestObject = {
-            uri : `user/verification/finalize-forgot-password-flow/${otp.join('').toString()}`
+            uri : `user/verification/verify-signup-code/${otp.join('').toString()}`
         }
-        //store token in local storage for retrieval
-        localStorage.setItem('unique',otp.join('').toString());
         setLoaderState(true);
-        await getAxiosRequest(sendOtpRequestObject.uri)
+        await getAxiosRequestWithAuthorizationHeader(sendOtpRequestObject.uri)
         .then((response) => {
             const {success, message, code} = response.data;
             if(success && code === 200){
                 setLoaderState(false);
-                localStorage.setItem('unique',otp.join('').toString());
                 alert(message);
-                router.push('/reset-password');
+                //router.push('/'); dashboard
             }
         }).catch((error : AxiosError) => {
             setLoaderState(false);
@@ -107,9 +105,9 @@ export const OTPForm = () : JSX.Element => {
 
                 <div className='my-24'>
                     <p className='text-4xl font-bold py-2 capitalize'>Verification</p>
-                    <p className='text-lg font-semibold'>Please type in the One-Time password sent to your email</p>
+                    <p className='text-lg font-semibold'>Please type in the One-Time password sent to your email to verify your account</p>
 
-                    <form onSubmit={onSubmitHandlerForForgotPassword}>
+                    <form onSubmit={onSubmitHandlerSignUpForm}>
                     
                         <div className='w-full flex flex-row gap-2 md:gap-4 lg:gap-6 xl:gap-8 items-center'>
                         {

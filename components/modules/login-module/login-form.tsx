@@ -2,7 +2,7 @@ import { AxiosError } from 'axios';
 import Link from 'next/link';
 import React from 'react';
 import { postAxiosRequest } from '../../../utils/axios-requests';
-import { ErrorInterfaceObj, LoginDetailsInterface } from '../../../utils/constants';
+import { Constants, ErrorInterfaceObj, LoginDetailsInterface } from '../../../utils/constants';
 import { validateEmail, validatePassword } from '../../../utils/util-functions';
 import { ReactSpinnerLoader } from '../../shared-components/react-spinner-loader';
 
@@ -41,7 +41,7 @@ export const LoginForm = () : JSX.Element => {
             setPasswordError({...passwordError, isError : false});
         }
         else setPasswordError({...passwordError,
-            msg : "Password length must be at least 8 characters, must contain upper and lowercase alphabets,special character",
+            msg : Constants.PASSWORD_REQUIREMENT,
             isError : true}
         );
     }

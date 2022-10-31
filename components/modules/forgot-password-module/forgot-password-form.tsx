@@ -1,7 +1,11 @@
+import { AxiosError } from 'axios';
 import Link from 'next/link';
 import React from 'react';
+import { getAxiosRequest } from '../../../utils/axios-requests';
 import { ErrorInterfaceObj } from '../../../utils/constants';
 import { validateEmail } from '../../../utils/util-functions';
+import { NextRouter, useRouter } from 'next/router';
+import { ReactSpinnerLoader } from '../../shared-components/react-spinner-loader';
 
 const initialErrorObj : ErrorInterfaceObj = {
     msg : '',
@@ -11,6 +15,8 @@ const initialErrorObj : ErrorInterfaceObj = {
 export const ForgotPasswordForm = () : JSX.Element => {
     const [email, setEmail] = React.useState<string>('');
     const [emailError, setEmailError] = React.useState({...initialErrorObj});
+    const [loader, setLoaderState] = React.useState<boolean>(false);
+    const router : NextRouter = useRouter();
 
     const emailOnchangeHandler = ({target} : React.ChangeEvent<HTMLInputElement>) => {
         const {value} = target;
@@ -22,9 +28,31 @@ export const ForgotPasswordForm = () : JSX.Element => {
         }  
     }
     
-    const onSubmitHandler = (e : React.SyntheticEvent<HTMLFormElement>) => {
+    const onSubmitHandler = async (e : React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(email);
+        
+        const forgotPasswordRequestObject = {
+            uri : `user/verification/initiate-forgot-password-flow/${email}`
+        }
+        setLoaderState(true);
+        await getAxiosRequest(forgotPasswordRequestObject.uri)
+        .then((response) => {
+            const {data : {data,success, code, message}} = response;
+            setLoaderState(false);
+            if(success && code === 200){
+                setTimeout(() => {
+                    router.push('/otp-verification');
+                },1000);
+            }
+        }).catch((error : AxiosError) => {
+            setLoaderState(false);
+            if(error.isAxiosError){
+                const {data : {success, message,code}} = error.response as any;
+                if(!success && code !== 200){
+                    alert(message);
+                }
+            }
+        });
     }
 
     React.useEffect(() => {},[email]);
@@ -68,6 +96,7 @@ export const ForgotPasswordForm = () : JSX.Element => {
                     </div>
                 </div>
             </div>
+            {loader && <ReactSpinnerLoader/>}
         </div>
     );
 }

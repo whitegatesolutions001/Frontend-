@@ -2,9 +2,10 @@ import { AxiosError } from 'axios';
 import Link from 'next/link';
 import React, {useState, useEffect} from 'react';
 import { postAxiosRequest } from '../../../utils/axios-requests';
-import { AxiosRequestInterface, ErrorInterfaceObj, SignPersonInterface } from '../../../utils/constants';
+import { AxiosRequestInterface, Constants, ErrorInterfaceObj, SignPersonInterface } from '../../../utils/constants';
 import { validateEmail, validatePassword, validatePhoneNumber } from '../../../utils/util-functions';
 import { ReactSpinnerLoader } from '../../shared-components/react-spinner-loader';
+import { useRouter, NextRouter } from 'next/router';
 
 
 const initialState : SignPersonInterface = {
@@ -30,6 +31,7 @@ export const SignUpForm = () : JSX.Element => {
     const [confirmPasswordError,setConfirmPasswordError] = useState<ErrorInterfaceObj>({...initialErrorObj});
     const [tempPassword, setTempPassword] = useState<string>('');
     const [releaseButton, setButtonRelease] = useState({loader : false, checked : false});
+    const router : NextRouter = useRouter();
 
     const firstNameOnchangeHandler = ({target} : React.ChangeEvent<HTMLInputElement>) => {
         const {value} = target;
@@ -70,7 +72,7 @@ export const SignUpForm = () : JSX.Element => {
             setPasswordError({...passwordError, isError : false});
         }
         else setPasswordError({...passwordError,
-            msg : "Password length must be at least 8 characters, must contain upper and lowercase alphabets,special character",
+            msg : Constants.PASSWORD_REQUIREMENT,
             isError : true}
             );
     }
@@ -108,8 +110,12 @@ export const SignUpForm = () : JSX.Element => {
                 const { token,tokenExpiryDate,tokenInitializationDate,userId } = data;
                 if(token && userId){
                     //display successful message, then proceed to new registration
+                    localStorage.setItem('token',token);
+                    localStorage.setItem('userId', userId);
                     setButtonRelease({...releaseButton, loader : false});
                     alert(message);
+                    //store token and co inside localHost
+                    router.push('/verify-account');
                 }
             }
  
