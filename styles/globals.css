@@ -21,7 +21,7 @@ a {
   box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
@@ -41,7 +41,7 @@ a {
   input::placeholder{
     color: #303030;
   }
-}
+} */
 
 input[type="checkbox"]:checked{
   accent-color: #6157A0;
@@ -65,11 +65,11 @@ input:focus{
   grid-area: 1 / 1;
 }
 
-.dark{
+/*.dark{
   background-color: darkgray;
   color: #303030;
 }
-/* .dark input[type="text"]{
+ .dark input[type="text"]{
   background-color: darkgray;
 }
 .dark input[type="email"]{

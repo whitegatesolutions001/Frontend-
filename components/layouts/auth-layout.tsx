@@ -40,7 +40,7 @@ const AuthLayoutComponent :FC<Props> = ({children}) : JSX.Element => {
                     <div className='overlay bg-[#6157A0] bg-opacity-30'/>
                 </div>
             </div>
-            <div className='w-full lg:w-1/2 h-auto lg:max-h-screen lg:overflow-y-auto'>
+            <div className='w-full bg-white lg:w-1/2 h-auto lg:max-h-screen lg:overflow-y-auto'>
             {/* <div className={
                theme && theme === 'dark' ?'w-full lg:w-1/2 h-auto lg:max-h-screen lg:overflow-y-auto dark' 
                 :'light w-full lg:w-1/2 h-auto lg:max-h-screen lg:overflow-y-auto'}>
