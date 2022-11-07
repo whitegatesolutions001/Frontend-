@@ -72,24 +72,33 @@ export const ForgotPasswordForm = () : JSX.Element => {
                                 ? "text-[#DC143C] w-full py-2.5 px-4 rounded-md border border-[#DC143C] text-sm mt-4 mb-2"
                                 :"w-full py-3 px-4 rounded-md border border-[#6157A0] text-sm my-4" }
                             required
-                            placeholder='youremail@whatever.com'
+                            placeholder='Enter your Email'
                             onChange={(e) => emailOnchangeHandler(e)}
                             />
                             {emailError.isError && <span className='text-xs text-[#DC143C]'>{emailError.msg}</span>}
                         </div>
 
-                        <input type={"submit"}
+                        {/* <input type={"submit"}
                         value="Reset Password"
                         className={validateEmail(email) && !emailError.isError
                             ?"w-full p-3 text-[#fff] text-xs bg-[#6157A0] rounded-md my-2 cursor-pointer hover:shadow-lg transition-shadow duration-300 delay-200"
                             :"w-full p-3 bg-[#EFF0F6] text-xs text-gray-500 rounded-md my-2"}
-                        />
+                        /> */}
+                        <button type={"submit"}
+                        disabled={validateEmail(email) && !emailError.isError ?false : true}
+                        className="w-full p-3 text-white text-xs bg-[#6157A0] 
+                        rounded-md my-2 cursor-pointer hover:shadow-lg 
+                        transition-shadow duration-300 delay-200 
+                        disabled:bg-[#EFF0F6] 
+                        disabled:shadow-none 
+                        disabled:text-gray-500 disabled:cursor-default"
+                        >Reset Password</button>
                     </form>
 
                     <div className='text-center p-4 text-sm'>
                         <p>Do you remember your password?&nbsp;
                         <Link href={'/login'} passHref>
-                            <span className='text-[#6157A0] hover:underline cursor-pointer font-bold'>Log&nbsp;In</span>
+                            <span className='text-[#6157A0] hover:text-blue-500 cursor-pointer font-bold'>Log&nbsp;In</span>
                         </Link>
                         </p>
                         

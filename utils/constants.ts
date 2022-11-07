@@ -23,6 +23,7 @@ export interface SignPersonInterface{
 export interface ErrorInterfaceObj{
     msg : string;
     isError : boolean;
+    value ?: string;
 }
 
 export interface AxiosRequestInterface{

@@ -153,17 +153,26 @@ export const SignUpOtpComponent = () : JSX.Element => {
                             onKeyDown={(e) => handleKeyEvent(e, index)}/>
                         )}
                         </div>
-                        <input type={"submit"}
+                        {/* <input type={"submit"}
                         value="Proceed"
                         className={isArrayFull(otp)
                             ?"w-full p-3 text-[#fff] text-xs bg-[#6157A0] rounded-md my-2 cursor-pointer hover:shadow-lg transition-shadow duration-300 delay-200"
                             :"w-full p-3 bg-[#EFF0F6] text-xs text-gray-500 rounded-md my-2"}
-                        />
+                        /> */}
+                        <button type={"submit"}
+                        disabled={isArrayFull(otp) ? false : true}
+                        className="w-full p-3 text-white text-xs bg-[#6157A0] 
+                        rounded-md my-2 cursor-pointer hover:shadow-lg 
+                        transition-shadow duration-300 delay-200 
+                        disabled:bg-[#EFF0F6] 
+                        disabled:shadow-none 
+                        disabled:text-gray-500 disabled:cursor-default"
+                        >Proceed</button>
                     </form>
 
                     <div className='text-center p-4 text-sm'>
                         <p>Did&apos;nt get a One-Time password?&nbsp;
-                        <button className='text-[#6157A0] font-bold border-none hover:underline' onClick={onClickResendOTPHandler}>
+                        <button className='text-[#6157A0] font-bold border-none hover:text-blue-500' onClick={onClickResendOTPHandler}>
                             <span>ResendOTP</span>
                         </button>
                         </p>

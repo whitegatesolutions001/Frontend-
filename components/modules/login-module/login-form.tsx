@@ -6,6 +6,9 @@ import { Constants, ErrorInterfaceObj, LoginDetailsInterface } from '../../../ut
 import { validateEmail, validatePassword } from '../../../utils/util-functions';
 import { ReactSpinnerLoader } from '../../shared-components/react-spinner-loader';
 import { useRouter, NextRouter} from 'next/router';
+import { IconButton } from '@mui/material';
+import RemoveRedEyeRoundedIcon from '@mui/icons-material/RemoveRedEyeRounded';
+import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
 
 const initialState :LoginDetailsInterface = {
     email : '',
@@ -14,14 +17,18 @@ const initialState :LoginDetailsInterface = {
 
 const initialErrorObj : ErrorInterfaceObj = {
     msg : '',
-    isError : false
+    isError : false,
 };
 
 export const LoginForm = () : JSX.Element => {
     const [loginDetails, setLoginDetails] = React.useState<LoginDetailsInterface>({...initialState});
+   // const [temporaryLoginDetails, setTempDetails] = React.useState<LoginDetailsInterface>({...initialState});
     const [emailError, setEmailError] = React.useState<ErrorInterfaceObj>(initialErrorObj);
     const [passwordError, setPasswordError] = React.useState<ErrorInterfaceObj>(initialErrorObj);
-    const [rememberMe, setRememberMe] = React.useState<boolean>(false);
+    const [boolStates, setBooleanStates] = React.useState({
+        rememberMe : false,
+        viewPassword : false
+    });
     const [loader, setLoaderState] = React.useState<boolean>(false);
     const router : NextRouter = useRouter();
 
@@ -32,7 +39,7 @@ export const LoginForm = () : JSX.Element => {
             setLoginDetails({...loginDetails, email : value});
             setEmailError({...emailError, msg : 'valid', isError : false}); 
         }else {
-            setEmailError({...emailError, msg : 'Invalid Email Address', isError : true}); 
+            setEmailError({...emailError, msg : 'Invalid Email Address', isError : value.length > 1 && true,}); 
         }  
     }
     
@@ -43,8 +50,8 @@ export const LoginForm = () : JSX.Element => {
             setPasswordError({...passwordError, isError : false});
         }
         else setPasswordError({...passwordError,
-            msg : Constants.PASSWORD_REQUIREMENT,
-            isError : true}
+            msg : "Invalid Password",
+            isError : value.length > 1 && true}
         );
     }
     
@@ -96,58 +103,74 @@ export const LoginForm = () : JSX.Element => {
                 <p className='text-4xl  font-bold py-6'>Welcome to your 
                 <br/>
                 Compliance Assistant</p>
-
                 <div className='my-8'>
                     <form onSubmit={onSubmitHandler}>
                         <div className='flex flex-col mb-2'>
                             <p className='capitalize font-bold text-xs'>Email Address</p>
                             <input type={"email"} 
                             className={emailError.isError
-                                ?"text-[#DC143C] w-full py-2.5 px-4 rounded-md border border-[#DC143C] text-sm mt-4 mb-2"
+                                ?"text-[#DC143C] w-full py-3 px-4 rounded-md border border-[#DC143C] text-sm my-2"
                                 :"text-black w-full py-3 px-4 rounded-md border border-[#6157A0] text-sm my-4" }
                             required
-                            placeholder='youremail@whatever.com'
+                            placeholder='enter your email'
                             onChange={(e) => emailOnchangeHandler(e)}/>
                             {emailError.isError && <span className='text-xs text-[#DC143C]'>{emailError.msg}</span>}
                         </div>
 
                         <div className='flex flex-col mb-2'>
                             <p className='capitalize font-bold text-xs'>password</p>
-                            <input type={"password"} 
-                            className={passwordError.isError
-                                ? "text-[#DC143C] w-full py-2.5 px-4 rounded-md border border-[#DC143C] text-sm mt-4 mb-2"
-                                :"text-black w-full py-3 px-4 rounded-md border border-[#6157A0] text-sm my-4" }
-                            required
-                            placeholder='............'
-                            onChange={(e) => setPasswordOnchangeHandler(e)}/>
+                            <div  className={passwordError.isError
+                                    ? "text-[#DC143C] w-full flex justify-between items-center rounded-md my-2 border border-[#DC143C] text-sm"
+                                    :"text-black w-full rounded-md border border-[#6157A0] text-sm my-4 flex justify-between items-center" }>
+
+                                <input type={boolStates.viewPassword ? "text" :"password"} 
+                                    className="px-4 py-3 rounded-md w-10/12"
+                                    required
+                                    placeholder='Enter your password'
+                                    onChange={(e) => setPasswordOnchangeHandler(e)}/>
+
+                                <IconButton onClick={() => setBooleanStates({...boolStates, viewPassword : !boolStates.viewPassword})}>
+                                    {boolStates.viewPassword ? <RemoveRedEyeRoundedIcon sx={{
+                                        color : '#000'
+                                    }}/> : <VisibilityOffRoundedIcon 
+                                    sx={{
+                                        color : '#000'
+                                    }}/>}
+                                </IconButton>
+                                
+                            </div>
                             {passwordError.isError && <span className='text-xs text-[#DC143C]'>{passwordError.msg}</span>}
                         </div>
                         
                         <div className='flex justify-between gap-4 items-center my-4 text-xs font-bold'>
                             <div className='flex flex-row items-center gap-2'>
-                                <input type={"checkbox"} onChange={(e) => setRememberMe(e.target.checked)}/>
+                                <input type={"checkbox"} onChange={(e) => setBooleanStates({...boolStates, rememberMe : e.target.checked})}/>
                                 <span className=''>Remember me</span>
                             </div>
 
                             <Link href={'/forgot-password'} passHref>
-                                <span className='text-[#6157A0] hover:underline cursor-pointer'>Forgot Password?</span>
+                                <span className='text-[#6157A0] hover:text-blue-500 cursor-pointer'>Forgot Password?</span>
                             </Link>
                         </div>
-
-                        <input type={"submit"}
-                        value="Login"
-                        className={validateEmail(loginDetails.email) &&!emailError.isError
-                            && validatePassword(loginDetails.password) && !passwordError.isError
-                            ?"w-full p-3 text-[#fff] text-xs bg-[#6157A0] rounded-md my-2 cursor-pointer hover:shadow-lg transition-shadow duration-300 delay-200"
-                            :"w-full p-3 bg-[#EFF0F6] text-xs text-gray-500 rounded-md my-2"
-                        }
-                        />
+                        {/* :"w-full p-3 bg-[#EFF0F6] text-xs text-gray-500 rounded-md my-2" */}
+                        <button type={"submit"}
+                        disabled={validateEmail(loginDetails.email) &&!emailError.isError
+                        && validatePassword(loginDetails.password) && !passwordError.isError
+                        ?false : true}
+                        className="w-full p-3 text-white text-xs bg-[#6157A0] 
+                        rounded-md my-2 cursor-pointer hover:shadow-lg 
+                        transition-shadow duration-300 delay-200 
+                        disabled:bg-[#EFF0F6] 
+                        disabled:shadow-none 
+                        disabled:text-gray-500 disabled:cursor-default"
+                        
+                        >Login</button>
                     </form>
 
                     <div className='text-center p-4 text-sm'>
                         <p>Don&apos;t have an account?&nbsp;
                         <Link href={'/signUp'} passHref>
-                            <span className='text-[#6157A0] hover:underline cursor-pointer font-bold'>SignUp</span>
+                            <span className='text-[#6157A0] hover:text-blue-500 cursor-pointer font-bold'>SignUp</span>
                         </Link>
                         </p>
                         

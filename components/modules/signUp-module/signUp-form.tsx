@@ -6,6 +6,9 @@ import { AxiosRequestInterface, Constants, ErrorInterfaceObj, SignPersonInterfac
 import { validateEmail, validatePassword, validatePhoneNumber } from '../../../utils/util-functions';
 import { ReactSpinnerLoader } from '../../shared-components/react-spinner-loader';
 import { useRouter, NextRouter } from 'next/router';
+import RemoveRedEyeRoundedIcon from '@mui/icons-material/RemoveRedEyeRounded';
+import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
+import { IconButton, Tooltip } from '@mui/material';
 
 
 const initialState : SignPersonInterface = {
@@ -31,6 +34,11 @@ export const SignUpForm = () : JSX.Element => {
     const [confirmPasswordError,setConfirmPasswordError] = useState<ErrorInterfaceObj>({...initialErrorObj});
     const [tempPassword, setTempPassword] = useState<string>('');
     const [releaseButton, setButtonRelease] = useState({loader : false, checked : false});
+    const [boolStates, setBooleanStates] = React.useState({
+        rememberMe : false,
+        viewPassword : false,
+        viewConfirmPassword : false
+    });
     const router : NextRouter = useRouter();
 
     const firstNameOnchangeHandler = ({target} : React.ChangeEvent<HTMLInputElement>) => {
@@ -47,9 +55,9 @@ export const SignUpForm = () : JSX.Element => {
         const {value} = target;
         if(validateEmail(value)){
             setState({...personState, email : value});
-            setErrorState({...invalidEmail, msg : 'valid', isError : false}); 
+            setErrorState({...invalidEmail, msg : '', isError : false}); 
         }else {
-            setErrorState({...invalidEmail, msg : 'Invalid Email Address', isError : true}); 
+            setErrorState({...invalidEmail, msg : 'Invalid Email Address', isError : value.length > 1 && true}); 
         }  
     }
 
@@ -58,10 +66,10 @@ export const SignUpForm = () : JSX.Element => {
         //regex for validating phone number
         if(validatePhoneNumber(value)) {
             setState({...personState, phoneNumber : value});
-            setPhoneNumberError({...passwordError, msg:'Valid', isError : false});
+            setPhoneNumberError({...passwordError, msg:'', isError : false});
         }
         else {
-            setPhoneNumberError({...phoneError, msg:'Invalid Phone Number', isError : true});
+            setPhoneNumberError({...phoneError, msg:'Invalid Phone Number', isError : value.length > 1 && true});
         }
     }
 
@@ -69,11 +77,11 @@ export const SignUpForm = () : JSX.Element => {
         const {value} = target;
         if(validatePassword(value)){
             setTempPassword(value);
-            setPasswordError({...passwordError, isError : false});
+            setPasswordError({...passwordError,msg : '', isError : false});
         }
         else setPasswordError({...passwordError,
             msg : Constants.PASSWORD_REQUIREMENT,
-            isError : true}
+            isError : value.length > 1 && true}
             );
     }
 
@@ -82,10 +90,10 @@ export const SignUpForm = () : JSX.Element => {
         const {value} = target;
         if(tempPassword === value){
             setState({...personState, password : value}) ;
-            setConfirmPasswordError({...passwordError, isError : false});
+            setConfirmPasswordError({...passwordError, msg : '',isError : false});
             //setButtonRelease(!releaseButton);
         }
-        else setConfirmPasswordError({...passwordError,msg: "Passwords do not match", isError : true});
+        else setConfirmPasswordError({...passwordError,msg: "Passwords do not match", isError : value.length > 1 && true});
     }
 
     const onSignUpFormSubmitHandler = async (e : React.SyntheticEvent<HTMLFormElement>) => {
@@ -135,7 +143,7 @@ export const SignUpForm = () : JSX.Element => {
         if(tempPassword !== personState.password){
             setConfirmPasswordError({...passwordError,msg: "Passwords do not match", isError : true});
         }else{
-            setConfirmPasswordError({...passwordError, isError : false});
+            setConfirmPasswordError({...passwordError, msg: "", isError : false});
         }
     },[personState,tempPassword]);
 
@@ -153,7 +161,7 @@ export const SignUpForm = () : JSX.Element => {
                             <input type={"text"} 
                             className="text-black w-full py-2.5 px-4 rounded-md border border-[#6157A0] text-sm my-3" 
                             required
-                            placeholder='philip'
+                            placeholder='Enter your first name'
                             onChange={(e) =>firstNameOnchangeHandler(e)}
                             />
                         </div>
@@ -162,58 +170,92 @@ export const SignUpForm = () : JSX.Element => {
                             <input type={"text"} 
                             className="text-black w-full py-2.5 px-4 rounded-md border border-[#6157A0] text-sm my-3" 
                             required
-                            placeholder='ajayi'
+                            placeholder='Enter your last name'
                             onChange={(e) => lastNameOnchangeHandler(e)}/>
                         </div>
 
-                        <div className='flex flex-col mb-2'>
-                            <p className='capitalize font-bold text-xs'>Email Address</p>
-                            <input type={"email"} 
-                            className={invalidEmail.isError
-                                ? "text-[#DC143C] w-full py-2.5 px-4 rounded-md border border-[#DC143C] text-sm mt-3 mb-1"
-                                :"text-black w-full py-2.5 px-4 rounded-md border border-[#6157A0] text-sm my-3" }
-                            required
-                            placeholder='philipAjayi@gmail.com'
-                            onChange={(e) => emailOnchangeHandler(e)}/>
-                            {invalidEmail.isError && <span className='text-xs text-[#DC143C]'>{invalidEmail.msg}</span>}
-                        </div>
+                        <Tooltip title={invalidEmail.msg} arrow>
+                            <div className='flex flex-col mb-2'>
+                                <p className='capitalize font-bold text-xs'>Email Address</p>
+                                <input type={"email"} 
+                                className={invalidEmail.isError
+                                    ? "text-[#DC143C] w-full py-2.5 px-4 rounded-md border border-[#DC143C] text-sm mt-3 mb-1"
+                                    :"text-black w-full py-2.5 px-4 rounded-md border border-[#6157A0] text-sm my-3" }
+                                required
+                                placeholder='Enter your email'
+                                onChange={(e) => emailOnchangeHandler(e)}/>
+                                {/* {invalidEmail.isError && <span className='text-xs text-[#DC143C]'>{invalidEmail.msg}</span>} */}
+                            </div>
+                        </Tooltip>
 
-                        <div className='flex flex-col mb-2'>
-                            <p className='capitalize font-bold text-xs'>Phone Number</p>
-                            <input type={"text"} 
-                            className={phoneError.isError
-                                ?"text-[#DC143C] w-full py-2.5 px-4 rounded-md border border-[#DC143C] text-sm mt-3 mb-1"
-                                :"text-black w-full py-2.5 px-4 rounded-md border border-[#6157A0] text-sm my-3" }
-                            required
-                            maxLength={11}
-                            placeholder='08076082890'
-                            onChange={(e) => phoneNumberOnChangeHandler(e)}/>
-                            {phoneError.isError && <span className='text-xs text-[#DC143C]'>{phoneError.msg}</span>}
-                        </div>
+                        <Tooltip title={phoneError.msg} arrow>
+                            <div className='flex flex-col mb-2'>
+                                <p className='capitalize font-bold text-xs'>Phone Number</p>
+                                <input type={"text"} 
+                                className={phoneError.isError
+                                    ?"text-[#DC143C] w-full py-2.5 px-4 rounded-md border border-[#DC143C] text-sm my-3"
+                                    :"text-black w-full py-2.5 px-4 rounded-md border border-[#6157A0] text-sm my-3" }
+                                required
+                                maxLength={11}
+                                placeholder='Enter your phone number'
+                                onChange={(e) => phoneNumberOnChangeHandler(e)}/>
+                                {/* {phoneError.isError && <span className='text-xs text-[#DC143C]'>{phoneError.msg}</span>} */}
+                            </div>
+                        </Tooltip>
 
-                        <div className='flex flex-col mb-2'>
-                            <p className='capitalize font-bold text-xs'>set password</p>
-                            <input type={"password"} 
-                            className={passwordError.isError
-                                ?"text-[#DC143C] w-full py-2.5 px-4 rounded-md border border-[#DC143C] text-sm mt-3 mb-1"
-                                :"text-black w-full py-2.5 px-4 rounded-md border border-[#6157A0] text-sm my-3"} 
-                            required
-                            placeholder='............'
-                            onChange={(e) => setPasswordOnchangeHandler(e)}/>
-                            {passwordError.isError && <span className='text-xs text-[#DC143C]'>{passwordError.msg}</span>}
-                        </div>
+                        <Tooltip title={passwordError.msg} arrow>
+                            <div className='flex flex-col mb-2'>
+                                <p className='capitalize font-bold text-xs'>set password</p>
+                                <div  className={passwordError.isError
+                                        ? "text-[#DC143C] w-full flex justify-between items-center rounded-md my-4 border border-[#DC143C] text-sm"
+                                        :"text-black w-full rounded-md border border-[#6157A0] text-sm my-4 flex justify-between items-center" }>
+
+                                    <input type={boolStates.viewPassword ? "text" :"password"} 
+                                        className="px-4 py-3 rounded-md w-10/12"
+                                        required
+                                        placeholder='Set your Password'
+                                        onChange={(e) => setPasswordOnchangeHandler(e)}/>
+
+                                    <IconButton onClick={() => setBooleanStates({...boolStates, viewPassword : !boolStates.viewPassword})}>
+                                        {boolStates.viewPassword ? <RemoveRedEyeRoundedIcon sx={{
+                                            color : '#000'
+                                        }}/> : <VisibilityOffRoundedIcon 
+                                        sx={{
+                                            color : '#000'
+                                        }}/>}
+                                    </IconButton>
+                                    
+                                </div>
+                                {/* {passwordError.isError && <span className='text-xs text-[#DC143C]'>{passwordError.msg}</span>} */}
+                            </div>
+                        </Tooltip>
                         
-                        <div className='flex flex-col mb-2'>
-                            <p className='capitalize font-bold text-xs'>confirm password</p>
-                            <input type={"password"} 
-                            className={confirmPasswordError.isError 
-                                ?"text-[#DC143C] w-full py-2.5 px-4 rounded-md border border-[#DC143C] text-sm mt-3 mb-1"  
-                                :"text-black w-full py-2.5 px-4 rounded-md border border-[#6157A0] text-sm my-3"}
-                            required
-                            placeholder='............'
-                            onChange={(e) => confirmPasswordOnchangeHandler(e)}/>
-                            {confirmPasswordError.isError && <span className='text-xs text-[#DC143C]'>{confirmPasswordError.msg}</span>}
-                        </div>
+                        <Tooltip title={confirmPasswordError.msg} arrow>
+                            <div className='flex flex-col mb-2'>
+                                <p className='capitalize font-bold text-xs'>confirm password</p>
+                                <div  className={confirmPasswordError.isError
+                                        ? "text-[#DC143C] w-full flex justify-between items-center rounded-md my-4 border border-[#DC143C] text-sm"
+                                        :"text-black w-full rounded-md border border-[#6157A0] text-sm my-4 flex justify-between items-center" }>
+
+                                    <input type={boolStates.viewConfirmPassword ? "text" :"password"} 
+                                        className="px-4 py-3 rounded-md w-10/12"
+                                        required
+                                        placeholder='Confirm set password'
+                                        onChange={(e) => confirmPasswordOnchangeHandler(e)}/>
+
+                                    <IconButton onClick={() => setBooleanStates({...boolStates, viewConfirmPassword : !boolStates.viewConfirmPassword})}>
+                                        {boolStates.viewConfirmPassword ? <RemoveRedEyeRoundedIcon sx={{
+                                            color : '#000'
+                                        }}/> : <VisibilityOffRoundedIcon 
+                                        sx={{
+                                            color : '#000'
+                                        }}/>}
+                                    </IconButton>
+                                    
+                                </div>
+                                {/* {confirmPasswordError.isError && <span className='text-xs text-[#DC143C]'>{confirmPasswordError.msg}</span>}  */}
+                            </div>
+                        </Tooltip>
                         
                         <div className='my-1 text-xs font-bold'>
                             <div className='flex flex-row items-center gap-2'>
@@ -222,7 +264,24 @@ export const SignUpForm = () : JSX.Element => {
                             </div>
                         </div>
 
-                        <input type={"submit"}
+                        <button type={"submit"}
+                        disabled={personState.firstName
+                            && personState.lastName 
+                            && personState.email
+                            && personState.phoneNumber
+                            && personState.password
+                            && releaseButton.checked
+                        ?false : true}
+                        className="w-full p-3 text-white text-xs bg-[#6157A0] 
+                        rounded-md my-2 cursor-pointer hover:shadow-lg 
+                        transition-shadow duration-300 delay-200 
+                        disabled:bg-[#EFF0F6] 
+                        disabled:shadow-none 
+                        disabled:text-gray-500 disabled:cursor-default"
+                        
+                        >Register</button>
+
+                        {/* <input type={"submit"}
                         value="Register"
                         className={personState.firstName
                             && personState.lastName 
@@ -232,13 +291,13 @@ export const SignUpForm = () : JSX.Element => {
                             && releaseButton.checked
                         ? "w-full p-3 text-[#fff] text-xs bg-[#6157A0] rounded-md my-2 cursor-pointer hover:shadow-lg transition-shadow duration-300 delay-200" 
                         :"w-full p-3 bg-[#EFF0F6] text-xs text-gray-500 rounded-md my-2"}
-                        />
+                        /> */}
                     </form>
 
                     <div className='text-center text-sm'>
                         <p>Already have an account?&nbsp;
                         <Link href={'/login'} passHref>
-                            <span className='text-[#6157A0] hover:underline cursor-pointer font-bold'>Login</span>
+                            <span className='text-[#6157A0] hover:text-blue-500 cursor-pointer font-bold'>Login</span>
                         </Link>
                         </p>
                         

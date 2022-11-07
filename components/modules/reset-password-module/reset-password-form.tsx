@@ -6,6 +6,10 @@ import { AxiosRequestInterface, Constants, ErrorInterfaceObj } from '../../../ut
 import { validatePassword } from '../../../utils/util-functions';
 import { useRouter, NextRouter } from 'next/router';
 import { ReactSpinnerLoader } from '../../shared-components/react-spinner-loader';
+import RemoveRedEyeRoundedIcon from '@mui/icons-material/RemoveRedEyeRounded';
+import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
+import { IconButton, Tooltip } from '@mui/material';
+
 
 const initialErrorObj : ErrorInterfaceObj = {
     msg : '',
@@ -19,6 +23,12 @@ export const ResetPasswordForm = () : JSX.Element => {
         newPassword : '',
         confirmNewPassword : ''
     });
+    const [boolStates, setBooleanStates] = React.useState({
+        rememberMe : false,
+        viewPrevious : false,
+        viewNewPassword :false,
+        viewConfirmPassword : false
+    });
     const [temporaryPasswordError, setTempPassword] = React.useState<ErrorInterfaceObj>({...initialErrorObj});
     const [newPassword, setNewPassword] = React.useState<ErrorInterfaceObj>({...initialErrorObj});
     const [confirmPassword, setConfirmPassword] = React.useState<ErrorInterfaceObj>({...initialErrorObj});
@@ -29,9 +39,9 @@ export const ResetPasswordForm = () : JSX.Element => {
         const {value} = target;
         if(validatePassword(value)){
             setPassword({...password, temporaryPassword : value});
-           setTempPassword({...temporaryPasswordError, isError : false}); 
+           setTempPassword({...temporaryPasswordError, isError : false, msg : ''}); 
         }else {
-            setTempPassword({...temporaryPasswordError, msg : Constants.PASSWORD_REQUIREMENT, isError : true}); 
+            setTempPassword({...temporaryPasswordError, msg : Constants.PASSWORD_REQUIREMENT, isError : value.length > 1 && true}); 
         } 
     }
 
@@ -39,18 +49,20 @@ export const ResetPasswordForm = () : JSX.Element => {
         const {value} = target;
         if(validatePassword(value)){
             setPassword({...password, newPassword : value});
-            setNewPassword({...newPassword,isError : false}); 
+            setNewPassword({...newPassword,isError : false, msg : ''}); 
         }else {
-            setNewPassword({...newPassword, msg : 'Password length must be at least 8 characters, must contain upper and lowercase alphabets,special character', isError : true}); 
+            setNewPassword({...newPassword, 
+            msg : 'Password length must be at least 8 characters, must contain upper and lowercase alphabets,special character', 
+            isError : value.length > 1 && true}); 
         } 
     }
     const onChangeConfirmPassword = ({target} : React.ChangeEvent<HTMLInputElement>) => {
         const {value} = target;
         if(password.newPassword === value){
             setPassword({...password, confirmNewPassword : value});
-            setConfirmPassword({...confirmPassword,isError : false}); 
+            setConfirmPassword({...confirmPassword,isError : false, msg : ''}); 
         }else {
-            setConfirmPassword({...confirmPassword, msg : 'Passwords do not match', isError : true}); 
+            setConfirmPassword({...confirmPassword, msg : 'Passwords do not match', isError : value.length > 1 && true}); 
         } 
     }
     // const onSubmitHandler = async (e : React.SyntheticEvent<HTMLFormElement>) => {
@@ -143,56 +155,139 @@ export const ResetPasswordForm = () : JSX.Element => {
                 <div className='my-8'>
                     <form onSubmit={onSubmitHandler}>
                         <div className='flex flex-col mb-2'>
-                            <p className='capitalize font-bold text-xs'>Temporary Password</p>
-                            <input type={"text"} 
+                            {/* <Tooltip title={temporaryPasswordError.msg} arrow> */}
+                                <div className='flex flex-col mb-2'>
+                                    <p className='capitalize font-bold text-xs'>Temporary password</p>
+                                    <div  className={"text-black w-full rounded-md border border-[#6157A0] text-sm my-4 flex justify-between items-center" }>
+
+                                        <input type={boolStates.viewPrevious ? "text" :"password"} 
+                                            className="px-4 py-3 rounded-md w-10/12"
+                                            required
+                                            placeholder='Enter previous password'
+                                            onChange={(e) => onChangeTemporaryPasswordHandler(e)}/>
+
+                                        <IconButton onClick={() => setBooleanStates({...boolStates, viewPrevious : !boolStates.viewPrevious})}>
+                                            {boolStates.viewPrevious ? <RemoveRedEyeRoundedIcon sx={{
+                                                color : '#000'
+                                            }}/> : <VisibilityOffRoundedIcon 
+                                            sx={{
+                                                color : '#000'
+                                            }}/>}
+                                        </IconButton>
+                                        
+                                    </div>
+                                </div>
+                            {/* </Tooltip> */}
+                            {/* <input type={"text"} 
                             className={temporaryPasswordError.isError
                                 ? "text-[#DC143C] w-full py-2.5 px-4 rounded-md border border-[#DC143C] text-sm mt-4 mb-2"
                                 :"w-full py-3 px-4 rounded-md border border-[#6157A0] text-sm my-4" }
                             required
-                            placeholder='............'
+                            placeholder='Enter previous password'
                             onChange={(e) => onChangeTemporaryPasswordHandler(e)}/>
-                            {temporaryPasswordError.isError && <span className='text-xs text-[#DC143C]'>{temporaryPasswordError.msg}</span>}
+                            {temporaryPasswordError.isError && <span className='text-xs text-[#DC143C]'>{temporaryPasswordError.msg}</span>} */}
                         </div>
 
                         <div className='flex flex-col mb-2'>
-                            <p className='capitalize font-bold text-xs'>New Password</p>
-                            <input type={"text"} 
+                            <Tooltip title={newPassword.msg} arrow>
+                                <div className='flex flex-col mb-2'>
+                                    <p className='capitalize font-bold text-xs'>New password</p>
+                                    <div  className={newPassword.isError
+                                            ? "text-[#DC143C] w-full flex justify-between items-center rounded-md my-4 border border-[#DC143C] text-sm"
+                                            :"text-black w-full rounded-md border border-[#6157A0] text-sm my-4 flex justify-between items-center" }>
+
+                                        <input type={boolStates.viewNewPassword ? "text" :"password"} 
+                                            className="px-4 py-3 rounded-md w-10/12"
+                                            required
+                                            placeholder='Enter New Password'
+                                            onChange={(e) => onChangeNewPasswordHandler(e)}/>
+
+                                        <IconButton onClick={() => setBooleanStates({...boolStates, viewNewPassword : !boolStates.viewNewPassword})}>
+                                            {boolStates.viewNewPassword ? <RemoveRedEyeRoundedIcon sx={{
+                                                color : '#000'
+                                            }}/> : <VisibilityOffRoundedIcon 
+                                            sx={{
+                                                color : '#000'
+                                            }}/>}
+                                        </IconButton>
+                                        
+                                    </div>
+                                </div>
+                            </Tooltip>
+                            {/* <input type={"text"} 
                             className={newPassword.isError
                                 ? "text-[#DC143C] w-full py-2.5 px-4 rounded-md border border-[#DC143C] text-sm mt-4 mb-2"
                                 :"w-full py-3 px-4 rounded-md border border-[#6157A0] text-sm my-4" }
                             required
-                            placeholder='............'
+                            placeholder="Enter New Password"
                             onChange={(e) => onChangeNewPasswordHandler(e)}/>
                             
-                            {newPassword.isError && <span className='text-xs text-[#DC143C]'>{newPassword.msg}</span>}
+                            {newPassword.isError && <span className='text-xs text-[#DC143C]'>{newPassword.msg}</span>} */}
                         </div>
 
                         <div className='flex flex-col mb-2'>
-                            <p className='capitalize font-bold text-xs'>Confirm Password</p>
-                            <input type={"text"} 
+                            <Tooltip title={confirmPassword.msg} arrow>
+                                <div className='flex flex-col mb-2'>
+                                    <p className='capitalize font-bold text-xs'>Confirm password</p>
+                                    <div  className={confirmPassword.isError
+                                            ? "text-[#DC143C] w-full flex justify-between items-center rounded-md my-4 border border-[#DC143C] text-sm"
+                                            :"text-black w-full rounded-md border border-[#6157A0] text-sm my-4 flex justify-between items-center" }>
+
+                                        <input type={boolStates.viewConfirmPassword ? "text" :"password"} 
+                                            className="px-4 py-3 rounded-md w-10/12"
+                                            required
+                                            placeholder='Confirm New Password'
+                                            onChange={(e) => onChangeConfirmPassword(e)}/>
+
+                                        <IconButton onClick={() => setBooleanStates({...boolStates, viewConfirmPassword : !boolStates.viewConfirmPassword})}>
+                                            {boolStates.viewConfirmPassword ? <RemoveRedEyeRoundedIcon sx={{
+                                                color : '#000'
+                                            }}/> : <VisibilityOffRoundedIcon 
+                                            sx={{
+                                                color : '#000'
+                                            }}/>}
+                                        </IconButton>
+                                        
+                                    </div>
+                                </div>
+                            </Tooltip>
+                            {/* <input type={"text"} 
                             className={confirmPassword.isError
                                 ? "text-[#DC143C] w-full py-2.5 px-4 rounded-md border border-[#DC143C] text-sm mt-4 mb-2"
                                 :"w-full py-3 px-4 rounded-md border border-[#6157A0] text-sm my-4" }
                             required
-                            placeholder='............'
+                            placeholder="Confirm New Password"
                             onChange={(e) => onChangeConfirmPassword(e)}/>
-                            {confirmPassword.isError && <span className='text-xs text-[#DC143C]'>{confirmPassword.msg}</span>}
+                            {confirmPassword.isError && <span className='text-xs text-[#DC143C]'>{confirmPassword.msg}</span>} */}
                         </div>
 
-                        <input type={"submit"}
+                        <button type={"submit"}
+                        disabled={
+                        validatePassword(password.temporaryPassword) && !temporaryPasswordError.isError
+                        && validatePassword(password.newPassword) && !newPassword.isError
+                        && validatePassword(password.confirmNewPassword) && !confirmPassword.isError 
+                        ?false : true}
+                        className="w-full p-3 text-white text-xs bg-[#6157A0] 
+                        rounded-md my-2 cursor-pointer hover:shadow-lg 
+                        transition-shadow duration-300 delay-200 
+                        disabled:bg-[#EFF0F6] 
+                        disabled:shadow-none 
+                        disabled:text-gray-500 disabled:cursor-default"
+                        >Submit</button>
+                        {/* <input type={"submit"}
                         value="Submit"
                         className={validatePassword(password.temporaryPassword) && !temporaryPasswordError.isError
                             && validatePassword(password.newPassword) && !newPassword.isError
                             && validatePassword(password.confirmNewPassword) && !confirmPassword.isError 
                             ?"w-full p-3 text-[#fff] text-xs bg-[#6157A0] rounded-md my-2 cursor-pointer hover:shadow-lg transition-shadow duration-300 delay-200"
                             :"w-full p-3 bg-[#EFF0F6] text-xs text-gray-500 rounded-md my-2"}
-                        />
+                        /> */}
                     </form>
 
                     <div className='text-center p-4 text-sm'>
                         <p>Do you remember your password?&nbsp;
                         <Link href={'/login'} passHref>
-                            <span className='text-[#6157A0] hover:underline cursor-pointer font-bold'>Log&nbsp;In</span>
+                            <span className='text-[#6157A0] hover:text-blue-500 cursor-pointer font-bold'>Log&nbsp;In</span>
                         </Link>
                         </p>
                         
