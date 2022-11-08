@@ -135,7 +135,7 @@ export const LoginForm = () : JSX.Element => {
                         <div className='flex flex-col mb-2'>
                             <p className='capitalize font-bold text-xs'>password</p>
                             <div  className={passwordError.isError
-                                    ? "text-[#DC143C] w-full flex justify-between items-center rounded-md my-2 border border-[#DC143C] text-sm"
+                                    ? "text-[#DC143C] w-full flex justify-between items-center rounded-md my-4 border border-[#DC143C] text-sm"
                                     :"text-black w-full rounded-md border border-[#6157A0] text-sm my-4 flex justify-between items-center" }>
 
                                 <input type={boolStates.viewPassword ? "text" :"password"} 
