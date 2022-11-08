@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { IconButton } from '@mui/material';
+import { Alert, CircularProgress, IconButton } from '@mui/material';
 import KeyboardDoubleArrowLeftRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowLeftRounded';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import {NextRouter, useRouter} from 'next/router';
@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { getAxiosRequest, getAxiosRequestWithAuthorizationHeader } from '../../../utils/axios-requests';
 import { AxiosError } from 'axios';
 import { ReactSpinnerLoader } from '../../shared-components/react-spinner-loader';
+import { ErrorInterfaceObj } from '../../../utils/constants';
 
 let currentOTPIndex : number = 0;
 let otpString : string = '';
@@ -20,7 +21,11 @@ export const SignUpOtpComponent = () : JSX.Element => {
     const [activeOtpIndex, setActiveOtpIndex] = React.useState<number>(0);
     const [loader, setLoaderState] = React.useState<boolean>(false);
     const [resendLoader, setLoader] = React.useState<boolean>(false);
-
+    const [axiosResponse, setAxiosResponse] = React.useState<ErrorInterfaceObj>({
+        msg : '',
+        isError : false
+    });
+    
     const otpRef : React.MutableRefObject<any> = React.useRef(null);
 
     const handleOtpInputChange = ({target} : React.ChangeEvent<HTMLInputElement>) :void => {
@@ -74,19 +79,26 @@ export const SignUpOtpComponent = () : JSX.Element => {
             const {success, message, code} = response.data;
             if(success && code === 200){
                 setLoaderState(false);
-                alert(message);
+                //alert(message);
                 localStorage.setItem('message', "You have successfully created and verified your account");
-                router.push('/view-status');
+                setAxiosResponse({...axiosResponse, msg : message, isError : false});
+                setTimeout(() => {
+                    router.push('/view-status');
+                },2000);
             }
         }).catch((error : AxiosError) => {
             setLoaderState(false);
             if(error?.isAxiosError){
                 const {data : {success, code, message}} = error.response as any;
                 if(!success && code !== 200){
-                    alert(message);
+                   // alert(message);
+                    setAxiosResponse({...axiosResponse, msg : message, isError : true});
+                    setTimeout(() => {
+                        setAxiosResponse({...axiosResponse, msg : "", isError : false});
+                    },4000);
                 }
             }
-        })
+        });
     }
 
     const onClickResendOTPHandler = async() => {
@@ -103,14 +115,22 @@ export const SignUpOtpComponent = () : JSX.Element => {
 
             if(success && code === 200){
                 setLoader(false);
-                alert(message);
+                //alert(message);
+                setAxiosResponse({...axiosResponse, msg : message, isError : false});
+                setTimeout(() => {
+                    setAxiosResponse({...axiosResponse, msg : "", isError : false});
+                },2000);
             }
         }).catch((err : AxiosError) => {
             setLoader(false);
             if(err?.isAxiosError){
                 const {data : {success, code, message}} = err.response as any;
                 if(!success && code !== 200){
-                    alert(message);
+                    //alert(message);
+                    setAxiosResponse({...axiosResponse, msg : message, isError : true});
+                    setTimeout(() => {
+                        setAxiosResponse({...axiosResponse, msg : "", isError : false});
+                    },4000);
                 }
             }
         });
@@ -133,7 +153,14 @@ export const SignUpOtpComponent = () : JSX.Element => {
 
                 <div className='my-24'>
                     <p className='text-4xl font-bold py-2 capitalize'>Verification</p>
-                    <p className='text-lg font-semibold'>Please type in the One-Time password sent to your email to verify your account</p>
+                    <p className='text-lg font-semibold pb-4'>Please type in the One-Time password sent to your email to verify your account</p>
+
+                    {axiosResponse.msg && 
+                        <Alert 
+                            severity={axiosResponse.isError ? "error" : "success"} 
+                            sx={{margin : 0, borderRadius : '10px'}}>{axiosResponse.msg}
+                        </Alert>
+                    }
 
                     <form onSubmit={onSubmitHandlerSignUpForm}>
                     
@@ -160,14 +187,17 @@ export const SignUpOtpComponent = () : JSX.Element => {
                             :"w-full p-3 bg-[#EFF0F6] text-xs text-gray-500 rounded-md my-2"}
                         /> */}
                         <button type={"submit"}
-                        disabled={isArrayFull(otp) ? false : true}
+                        disabled={isArrayFull(otp) && !loader && !resendLoader ? false : true}
                         className="w-full p-3 text-white text-xs bg-[#6157A0] 
                         rounded-md my-2 cursor-pointer hover:shadow-lg 
                         transition-shadow duration-300 delay-200 
+                        flex justify-center items-center gap-4
                         disabled:bg-[#EFF0F6] 
                         disabled:shadow-none 
-                        disabled:text-gray-500 disabled:cursor-default"
-                        >Proceed</button>
+                        disabled:text-gray-500 disabled:cursor-default">
+                            {loader || resendLoader && <CircularProgress size={'1rem'} sx={{color : 'rgb(203 213 225)'}}/>} 
+                            {loader || resendLoader ? "Please Wait" : "Proceed"}
+                        </button>
                     </form>
 
                     <div className='text-center p-4 text-sm'>
@@ -180,8 +210,8 @@ export const SignUpOtpComponent = () : JSX.Element => {
                     </div>
                     
                 </div>
-                {loader && <ReactSpinnerLoader/>}
-                {resendLoader && <ReactSpinnerLoader/>}
+                {/* {loader && <ReactSpinnerLoader/>}
+                {resendLoader && <ReactSpinnerLoader/>} */}
             </div>
 
         </div>

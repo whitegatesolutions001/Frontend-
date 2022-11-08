@@ -8,7 +8,7 @@ import { useRouter, NextRouter } from 'next/router';
 import { ReactSpinnerLoader } from '../../shared-components/react-spinner-loader';
 import RemoveRedEyeRoundedIcon from '@mui/icons-material/RemoveRedEyeRounded';
 import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
-import { IconButton, Tooltip } from '@mui/material';
+import { Alert, CircularProgress, IconButton, Tooltip } from '@mui/material';
 
 
 const initialErrorObj : ErrorInterfaceObj = {
@@ -32,6 +32,7 @@ export const ResetPasswordForm = () : JSX.Element => {
     const [temporaryPasswordError, setTempPassword] = React.useState<ErrorInterfaceObj>({...initialErrorObj});
     const [newPassword, setNewPassword] = React.useState<ErrorInterfaceObj>({...initialErrorObj});
     const [confirmPassword, setConfirmPassword] = React.useState<ErrorInterfaceObj>({...initialErrorObj});
+    const [axiosResponse, setAxiosResponse] = React.useState<ErrorInterfaceObj>(initialErrorObj);
     const [loader, setLoaderState] =  React.useState<boolean>(false);
     const router : NextRouter = useRouter();
 
@@ -124,8 +125,11 @@ export const ResetPasswordForm = () : JSX.Element => {
             const {success, message, code} = response.data;
             if(success && code === 200){
                 setLoaderState(false);
-                alert(message);
-                router.push('/login');
+                //alert(message);
+                setAxiosResponse({...axiosResponse, msg : message, isError: false});
+                setTimeout(() => {
+                    router.push('/login');
+                },3000);
             }
 
         }).catch((error : AxiosError) => {
@@ -133,7 +137,11 @@ export const ResetPasswordForm = () : JSX.Element => {
                 setLoaderState(false);
                 const {data : {success, message, code} } = error.response as any;
                 if(!success && code !== 200){
-                    alert(message);
+                    //alert(message);
+                    setAxiosResponse({...axiosResponse, msg : message, isError : true});
+                    setTimeout(() => {
+                        setAxiosResponse({...axiosResponse, msg : "", isError : false});
+                    },4000);
                 }
             }
         });
@@ -150,8 +158,13 @@ export const ResetPasswordForm = () : JSX.Element => {
         <div className='w-full flex justify-center items-center'>
             <div className='w-4/5 my-12 p-4 md:p-8'>
                 <p className='text-4xl font-bold py-2 capitalize'>Reset your password?</p>
-                <p className='text-lg font-semibold'>Put your temporary password and the new password</p>
-
+                <p className='text-lg font-semibold pb-4'>Put your temporary password and the new password</p>
+                {axiosResponse.msg && 
+                <Alert 
+                    severity={axiosResponse.isError ? "error" : "success"} 
+                    sx={{margin : 0, borderRadius : '10px'}}>{axiosResponse.msg}
+                </Alert>
+                }
                 <div className='my-8'>
                     <form onSubmit={onSubmitHandler}>
                         <div className='flex flex-col mb-2'>
@@ -167,9 +180,9 @@ export const ResetPasswordForm = () : JSX.Element => {
                                             onChange={(e) => onChangeTemporaryPasswordHandler(e)}/>
 
                                         <IconButton onClick={() => setBooleanStates({...boolStates, viewPrevious : !boolStates.viewPrevious})}>
-                                            {boolStates.viewPrevious ? <RemoveRedEyeRoundedIcon sx={{
+                                            {boolStates.viewPrevious ? <VisibilityOffRoundedIcon sx={{
                                                 color : '#000'
-                                            }}/> : <VisibilityOffRoundedIcon 
+                                            }}/> : <RemoveRedEyeRoundedIcon
                                             sx={{
                                                 color : '#000'
                                             }}/>}
@@ -203,9 +216,9 @@ export const ResetPasswordForm = () : JSX.Element => {
                                             onChange={(e) => onChangeNewPasswordHandler(e)}/>
 
                                         <IconButton onClick={() => setBooleanStates({...boolStates, viewNewPassword : !boolStates.viewNewPassword})}>
-                                            {boolStates.viewNewPassword ? <RemoveRedEyeRoundedIcon sx={{
+                                            {boolStates.viewNewPassword ? <VisibilityOffRoundedIcon sx={{
                                                 color : '#000'
-                                            }}/> : <VisibilityOffRoundedIcon 
+                                            }}/> : <RemoveRedEyeRoundedIcon
                                             sx={{
                                                 color : '#000'
                                             }}/>}
@@ -240,9 +253,9 @@ export const ResetPasswordForm = () : JSX.Element => {
                                             onChange={(e) => onChangeConfirmPassword(e)}/>
 
                                         <IconButton onClick={() => setBooleanStates({...boolStates, viewConfirmPassword : !boolStates.viewConfirmPassword})}>
-                                            {boolStates.viewConfirmPassword ? <RemoveRedEyeRoundedIcon sx={{
+                                            {boolStates.viewConfirmPassword ? <VisibilityOffRoundedIcon sx={{
                                                 color : '#000'
-                                            }}/> : <VisibilityOffRoundedIcon 
+                                            }}/> : <RemoveRedEyeRoundedIcon
                                             sx={{
                                                 color : '#000'
                                             }}/>}
@@ -266,14 +279,18 @@ export const ResetPasswordForm = () : JSX.Element => {
                         validatePassword(password.temporaryPassword) && !temporaryPasswordError.isError
                         && validatePassword(password.newPassword) && !newPassword.isError
                         && validatePassword(password.confirmNewPassword) && !confirmPassword.isError 
+                        && !loader
                         ?false : true}
                         className="w-full p-3 text-white text-xs bg-[#6157A0] 
                         rounded-md my-2 cursor-pointer hover:shadow-lg 
                         transition-shadow duration-300 delay-200 
+                        flex justify-center items-center gap-4
                         disabled:bg-[#EFF0F6] 
                         disabled:shadow-none 
-                        disabled:text-gray-500 disabled:cursor-default"
-                        >Submit</button>
+                        disabled:text-gray-500 disabled:cursor-default">
+                            {loader && <CircularProgress size={'1rem'} sx={{color : 'rgb(203 213 225)'}}/>} 
+                            {loader ? "Please Wait" : "Submit"}
+                        </button>
                         {/* <input type={"submit"}
                         value="Submit"
                         className={validatePassword(password.temporaryPassword) && !temporaryPasswordError.isError
@@ -294,7 +311,7 @@ export const ResetPasswordForm = () : JSX.Element => {
                     </div>
                 </div>
             </div>
-            {loader && <ReactSpinnerLoader/>}
+            {/* {loader && <ReactSpinnerLoader/>} */}
         </div>
     );
 }

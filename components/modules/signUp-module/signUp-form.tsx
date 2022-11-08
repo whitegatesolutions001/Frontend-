@@ -8,7 +8,7 @@ import { ReactSpinnerLoader } from '../../shared-components/react-spinner-loader
 import { useRouter, NextRouter } from 'next/router';
 import RemoveRedEyeRoundedIcon from '@mui/icons-material/RemoveRedEyeRounded';
 import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
-import { IconButton, Tooltip } from '@mui/material';
+import { Alert, CircularProgress, IconButton, Tooltip } from '@mui/material';
 
 
 const initialState : SignPersonInterface = {
@@ -39,6 +39,7 @@ export const SignUpForm = () : JSX.Element => {
         viewPassword : false,
         viewConfirmPassword : false
     });
+    const [axiosResponse, setAxiosResponse] = React.useState<ErrorInterfaceObj>(initialErrorObj);
     const router : NextRouter = useRouter();
 
     const firstNameOnchangeHandler = ({target} : React.ChangeEvent<HTMLInputElement>) => {
@@ -121,9 +122,10 @@ export const SignUpForm = () : JSX.Element => {
                     localStorage.setItem('token',token);
                     localStorage.setItem('userId', userId);
                     setButtonRelease({...releaseButton, loader : false});
-                    alert(message);
+                    //alert(message);
                     //store token and co inside localHost
-                    router.push('/verify-account');
+                    setAxiosResponse({...axiosResponse, msg : message, isError: false});
+                    //router.push('/verify-account');
                 }
             }
  
@@ -134,7 +136,11 @@ export const SignUpForm = () : JSX.Element => {
                 if(!success && code !== 200){
                     //handle error
                     setButtonRelease({...releaseButton, loader : false});
-                    alert(message);
+                    setAxiosResponse({...axiosResponse, msg : message, isError : true});
+                    setTimeout(() => {
+                        setAxiosResponse({...axiosResponse, msg : "", isError : false});
+                    },4000);
+                    //alert(message);
                 }
             }
         });
@@ -153,8 +159,12 @@ export const SignUpForm = () : JSX.Element => {
                 <p className='text-4xl font-bold py-6'>Welcome to your 
                 <br/>
                 Compliance Assistant</p>
-
-                <div className='mt-2 mb-8'>
+                {axiosResponse.msg && 
+                <Alert 
+                    severity={axiosResponse.isError ? "error" : "success"} 
+                    sx={{margin : 0, borderRadius : '10px'}}>{axiosResponse.msg}
+                </Alert>}
+                <div className='my-8'>
                     <form onSubmit={onSignUpFormSubmitHandler}>
                         <div className='flex flex-col mb-2'>
                             <p className='capitalize font-bold text-xs'>First Name</p>
@@ -217,9 +227,9 @@ export const SignUpForm = () : JSX.Element => {
                                         onChange={(e) => setPasswordOnchangeHandler(e)}/>
 
                                     <IconButton onClick={() => setBooleanStates({...boolStates, viewPassword : !boolStates.viewPassword})}>
-                                        {boolStates.viewPassword ? <RemoveRedEyeRoundedIcon sx={{
+                                        {boolStates.viewPassword ? <VisibilityOffRoundedIcon sx={{
                                             color : '#000'
-                                        }}/> : <VisibilityOffRoundedIcon 
+                                        }}/> : <RemoveRedEyeRoundedIcon
                                         sx={{
                                             color : '#000'
                                         }}/>}
@@ -244,9 +254,9 @@ export const SignUpForm = () : JSX.Element => {
                                         onChange={(e) => confirmPasswordOnchangeHandler(e)}/>
 
                                     <IconButton onClick={() => setBooleanStates({...boolStates, viewConfirmPassword : !boolStates.viewConfirmPassword})}>
-                                        {boolStates.viewConfirmPassword ? <RemoveRedEyeRoundedIcon sx={{
+                                        {boolStates.viewConfirmPassword ? <VisibilityOffRoundedIcon sx={{
                                             color : '#000'
-                                        }}/> : <VisibilityOffRoundedIcon 
+                                        }}/> : <RemoveRedEyeRoundedIcon
                                         sx={{
                                             color : '#000'
                                         }}/>}
@@ -271,15 +281,18 @@ export const SignUpForm = () : JSX.Element => {
                             && personState.phoneNumber
                             && personState.password
                             && releaseButton.checked
+                            && !releaseButton.loader
                         ?false : true}
                         className="w-full p-3 text-white text-xs bg-[#6157A0] 
                         rounded-md my-2 cursor-pointer hover:shadow-lg 
                         transition-shadow duration-300 delay-200 
+                        flex justify-center items-center gap-4
                         disabled:bg-[#EFF0F6] 
                         disabled:shadow-none 
-                        disabled:text-gray-500 disabled:cursor-default"
-                        
-                        >Register</button>
+                        disabled:text-gray-500 disabled:cursor-default">
+                            {releaseButton.loader  && <CircularProgress size={'1rem'} sx={{color : 'rgb(203 213 225)'}}/>} 
+                            {releaseButton.loader  ? "Please Wait" : "Register"}
+                        </button>
 
                         {/* <input type={"submit"}
                         value="Register"
@@ -304,7 +317,7 @@ export const SignUpForm = () : JSX.Element => {
                     </div>
                 </div>
             </div>
-            {releaseButton.loader && <ReactSpinnerLoader/>}
+            {/* {&& <ReactSpinnerLoader/>} */}
         </div>
     );
 }

@@ -6,7 +6,7 @@ import { Constants, ErrorInterfaceObj, LoginDetailsInterface } from '../../../ut
 import { validateEmail, validatePassword } from '../../../utils/util-functions';
 import { ReactSpinnerLoader } from '../../shared-components/react-spinner-loader';
 import { useRouter, NextRouter} from 'next/router';
-import { IconButton } from '@mui/material';
+import { Alert, CircularProgress, IconButton } from '@mui/material';
 import RemoveRedEyeRoundedIcon from '@mui/icons-material/RemoveRedEyeRounded';
 import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
 
@@ -25,6 +25,7 @@ export const LoginForm = () : JSX.Element => {
    // const [temporaryLoginDetails, setTempDetails] = React.useState<LoginDetailsInterface>({...initialState});
     const [emailError, setEmailError] = React.useState<ErrorInterfaceObj>(initialErrorObj);
     const [passwordError, setPasswordError] = React.useState<ErrorInterfaceObj>(initialErrorObj);
+    const [axiosResponse, setAxiosResponse] = React.useState<ErrorInterfaceObj>(initialErrorObj);
     const [boolStates, setBooleanStates] = React.useState({
         rememberMe : false,
         viewPassword : false
@@ -80,8 +81,12 @@ export const LoginForm = () : JSX.Element => {
                      localStorage.setItem('tokenInitializationDate',tokenInitializationDate);
                      localStorage.setItem('tokenExpiryDate',tokenExpiryDate);
                      localStorage.setItem('message', "LogIn successFul");
-                    alert(message);
-                    router.push('/view-status');
+                    //alert(message);
+                    setAxiosResponse({...axiosResponse, msg : message, isError: false});
+                    // setTimeout(() => {
+                    //     setAxiosResponse({...axiosResponse, msg : "", isError : false});
+                    // },4000);
+                    //router.push('/view-status');
                 }
                
             }
@@ -90,7 +95,10 @@ export const LoginForm = () : JSX.Element => {
                 setLoaderState(false);
                 const {data : {success, message, code} } = error.response as any;
                 if(!success && code !== 200){
-                    alert(message);
+                    setAxiosResponse({...axiosResponse, msg : message, isError : true});
+                    setTimeout(() => {
+                        setAxiosResponse({...axiosResponse, msg : "", isError : false});
+                    },4000);
                 }
             }
         })
@@ -103,6 +111,13 @@ export const LoginForm = () : JSX.Element => {
                 <p className='text-4xl  font-bold py-6'>Welcome to your 
                 <br/>
                 Compliance Assistant</p>
+
+                {axiosResponse.msg && 
+                <Alert 
+                    severity={axiosResponse.isError ? "error" : "success"} 
+                    sx={{margin : 0, borderRadius : '10px'}}>{axiosResponse.msg}
+                </Alert>}
+
                 <div className='my-8'>
                     <form onSubmit={onSubmitHandler}>
                         <div className='flex flex-col mb-2'>
@@ -114,7 +129,7 @@ export const LoginForm = () : JSX.Element => {
                             required
                             placeholder='enter your email'
                             onChange={(e) => emailOnchangeHandler(e)}/>
-                            {emailError.isError && <span className='text-xs text-[#DC143C]'>{emailError.msg}</span>}
+                            {/* {emailError.isError && <span className='text-xs text-[#DC143C]'>{emailError.msg}</span>} */}
                         </div>
 
                         <div className='flex flex-col mb-2'>
@@ -130,16 +145,16 @@ export const LoginForm = () : JSX.Element => {
                                     onChange={(e) => setPasswordOnchangeHandler(e)}/>
 
                                 <IconButton onClick={() => setBooleanStates({...boolStates, viewPassword : !boolStates.viewPassword})}>
-                                    {boolStates.viewPassword ? <RemoveRedEyeRoundedIcon sx={{
+                                    {boolStates.viewPassword ? <VisibilityOffRoundedIcon sx={{
                                         color : '#000'
-                                    }}/> : <VisibilityOffRoundedIcon 
+                                    }}/> : <RemoveRedEyeRoundedIcon
                                     sx={{
                                         color : '#000'
                                     }}/>}
                                 </IconButton>
                                 
                             </div>
-                            {passwordError.isError && <span className='text-xs text-[#DC143C]'>{passwordError.msg}</span>}
+                            {/* {passwordError.isError && <span className='text-xs text-[#DC143C]'>{passwordError.msg}</span>} */}
                         </div>
                         
                         <div className='flex justify-between gap-4 items-center my-4 text-xs font-bold'>
@@ -156,15 +171,18 @@ export const LoginForm = () : JSX.Element => {
                         <button type={"submit"}
                         disabled={validateEmail(loginDetails.email) &&!emailError.isError
                         && validatePassword(loginDetails.password) && !passwordError.isError
+                        && !loader
                         ?false : true}
                         className="w-full p-3 text-white text-xs bg-[#6157A0] 
                         rounded-md my-2 cursor-pointer hover:shadow-lg 
+                        flex justify-center items-center gap-4
                         transition-shadow duration-300 delay-200 
                         disabled:bg-[#EFF0F6] 
                         disabled:shadow-none 
-                        disabled:text-gray-500 disabled:cursor-default"
-                        
-                        >Login</button>
+                        disabled:text-gray-500 disabled:cursor-default">
+                            {loader && <CircularProgress size={'1rem'} sx={{color : 'rgb(203 213 225)'}}/>} 
+                            {loader ? "Please Wait" : "Login"}
+                        </button>
                     </form>
 
                     <div className='text-center p-4 text-sm'>
@@ -177,7 +195,7 @@ export const LoginForm = () : JSX.Element => {
                     </div>
                 </div>
             </div>
-            {loader && <ReactSpinnerLoader/>}
+            {/* {loader && <CircularProgress size={'1.5rem'} sx={{color : '#333'}}/>} */}
         </div>
     );
 }
