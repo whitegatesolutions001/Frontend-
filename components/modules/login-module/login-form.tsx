@@ -170,7 +170,7 @@ export const LoginForm = () : JSX.Element => {
                     <div className='text-center p-4 text-sm'>
                         <p>Don&apos;t have an account?&nbsp;
                         <Link href={'/signUp'} passHref>
-                            <span className='text-[#6157A0] hover:text-blue-500 cursor-pointer font-bold'>SignUp</span>
+                            <span className='text-[#6157A0] hover:text-blue-500 cursor-pointer font-bold'>Sign-up</span>
                         </Link>
                         </p>
                         
