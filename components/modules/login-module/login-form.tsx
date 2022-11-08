@@ -124,7 +124,7 @@ export const LoginForm = () : JSX.Element => {
                             <p className='capitalize font-bold text-xs'>Email Address</p>
                             <input type={"email"} 
                             className={emailError.isError
-                                ?"text-[#DC143C] w-full py-3 px-4 rounded-md border border-[#DC143C] text-sm my-2"
+                                ?"text-[#DC143C] w-full py-3 px-4 rounded-md border border-[#DC143C] text-sm my-4"
                                 :"text-black w-full py-3 px-4 rounded-md border border-[#6157A0] text-sm my-4" }
                             required
                             placeholder='enter your email'
