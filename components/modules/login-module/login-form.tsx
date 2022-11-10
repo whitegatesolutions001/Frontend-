@@ -36,6 +36,9 @@ export const LoginForm = () : JSX.Element => {
 
     const emailOnchangeHandler = ({target} : React.ChangeEvent<HTMLInputElement>) => {
         const {value} = target;
+        if(value.length <= 0){
+            setLoginDetails({...loginDetails, email : value});
+        }
         if(validateEmail(value)){
             setLoginDetails({...loginDetails, email : value});
             setEmailError({...emailError, msg : 'valid', isError : false}); 
@@ -46,6 +49,9 @@ export const LoginForm = () : JSX.Element => {
     
     const setPasswordOnchangeHandler = ({target} : React.ChangeEvent<HTMLInputElement>) => {
         const {value} = target;
+        if(value.length <= 0){
+            setLoginDetails({...loginDetails, password : value});
+        }
         if(validatePassword(value)){
             setLoginDetails({...loginDetails, password : value});
             setPasswordError({...passwordError, isError : false});
@@ -103,7 +109,9 @@ export const LoginForm = () : JSX.Element => {
             }
         })
     }
-    React.useEffect(() =>{},[loginDetails]);
+    React.useEffect(() =>{
+        console.log('login details',loginDetails);
+    },[loginDetails.email, loginDetails.password]);
 
     return(
         <div className='w-full flex justify-center items-center'>
@@ -169,8 +177,8 @@ export const LoginForm = () : JSX.Element => {
                         </div>
                         {/* :"w-full p-3 bg-[#EFF0F6] text-xs text-gray-500 rounded-md my-2" */}
                         <button type={"submit"}
-                        disabled={validateEmail(loginDetails.email) &&!emailError.isError
-                        && validatePassword(loginDetails.password) && !passwordError.isError
+                        disabled={validateEmail(loginDetails.email) && validatePassword(loginDetails.password) 
+                        && !emailError.isError && !passwordError.isError
                         && !loader
                         ?false : true}
                         className="w-full p-3 text-white text-xs bg-[#6157A0] 

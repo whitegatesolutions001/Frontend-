@@ -33,6 +33,7 @@ export const SignUpForm = () : JSX.Element => {
     const [passwordError,setPasswordError] = useState<ErrorInterfaceObj>({...initialErrorObj});
     const [confirmPasswordError,setConfirmPasswordError] = useState<ErrorInterfaceObj>({...initialErrorObj});
     const [tempPassword, setTempPassword] = useState<string>('');
+    //const [confirm, setConfirm] = useState<string>('');
     const [releaseButton, setButtonRelease] = useState({loader : false, checked : false});
     const [boolStates, setBooleanStates] = React.useState({
         rememberMe : false,
@@ -58,7 +59,8 @@ export const SignUpForm = () : JSX.Element => {
             setState({...personState, email : value});
             setErrorState({...invalidEmail, msg : '', isError : false}); 
         }else {
-            setErrorState({...invalidEmail, msg : 'Invalid Email Address', isError : value.length > 1 && true}); 
+            setErrorState({...invalidEmail, msg     
+            : 'Invalid Email Address', isError : value.length > 1 && true}); 
         }  
     }
 
@@ -83,14 +85,15 @@ export const SignUpForm = () : JSX.Element => {
         else setPasswordError({...passwordError,
             msg : Constants.PASSWORD_REQUIREMENT,
             isError : value.length > 1 && true}
-            );
+        );
     }
 
     
     const confirmPasswordOnchangeHandler = ({target} : React.ChangeEvent<HTMLInputElement>) => {
         const {value} = target;
-        if(tempPassword === value){
-            setState({...personState, password : value}) ;
+        if(tempPassword === value || value === tempPassword){
+            setState({...personState, password : value});
+            //setConfirm(value);
             setConfirmPasswordError({...passwordError, msg : '',isError : false});
             //setButtonRelease(!releaseButton);
         }
@@ -99,7 +102,7 @@ export const SignUpForm = () : JSX.Element => {
 
     const onSignUpFormSubmitHandler = async (e : React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const {firstName, lastName, email, phoneNumber, password} = personState;
+        const {firstName, lastName, email, phoneNumber,password} = personState;
         const axiosRequestObject : AxiosRequestInterface = {
             uri : 'user/sign-up',
             body : {
@@ -146,6 +149,8 @@ export const SignUpForm = () : JSX.Element => {
         });
     }
     useEffect(() => {
+        console.log('password', tempPassword);
+        console.log('confirm', personState.password)
         if(tempPassword !== personState.password){
             setConfirmPasswordError({...passwordError,msg: "Passwords do not match", isError : true});
         }else{
@@ -300,7 +305,7 @@ export const SignUpForm = () : JSX.Element => {
                             && personState.lastName 
                             && personState.email
                             && personState.phoneNumber
-                            && personState.password
+                            && confirm
                             && releaseButton.checked
                         ? "w-full p-3 text-[#fff] text-xs bg-[#6157A0] rounded-md my-2 cursor-pointer hover:shadow-lg transition-shadow duration-300 delay-200" 
                         :"w-full p-3 bg-[#EFF0F6] text-xs text-gray-500 rounded-md my-2"}
