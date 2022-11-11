@@ -91,13 +91,7 @@ export const SignUpForm = () : JSX.Element => {
     
     const confirmPasswordOnchangeHandler = ({target} : React.ChangeEvent<HTMLInputElement>) => {
         const {value} = target;
-        if(tempPassword === value || value === tempPassword){
-            setState({...personState, password : value});
-            //setConfirm(value);
-            setConfirmPasswordError({...passwordError, msg : '',isError : false});
-            //setButtonRelease(!releaseButton);
-        }
-        else setConfirmPasswordError({...passwordError,msg: "Passwords do not match", isError : value.length > 1 && true});
+        setState({...personState, password : value});
     }
 
     const onSignUpFormSubmitHandler = async (e : React.SyntheticEvent<HTMLFormElement>) => {
@@ -149,9 +143,8 @@ export const SignUpForm = () : JSX.Element => {
         });
     }
     useEffect(() => {
-        console.log('password', tempPassword);
-        console.log('confirm', personState.password)
-        if(tempPassword !== personState.password){
+        
+        if(tempPassword !== personState.password || personState.password !== tempPassword){
             setConfirmPasswordError({...passwordError,msg: "Passwords do not match", isError : true});
         }else{
             setConfirmPasswordError({...passwordError, msg: "", isError : false});
