@@ -159,13 +159,13 @@ export const ResetPasswordForm = () : JSX.Element => {
             <div className='w-4/5 my-12 p-4 md:p-8'>
                 <p className='text-4xl font-bold py-2 capitalize'>Reset your password?</p>
                 <p className='text-lg font-semibold pb-4'>Put your temporary password and the new password</p>
-                {axiosResponse.msg && 
+
                 <Alert 
                     severity={axiosResponse.isError ? "error" : "success"} 
-                    sx={{margin : 0, borderRadius : '10px'}}>{axiosResponse.msg}
+                    sx={{margin:0, borderRadius : '10px',visibility : `${axiosResponse.msg ? 'visible' : 'hidden'}`}}>{axiosResponse.msg}
                 </Alert>
-                }
-                <div className='my-8'>
+
+                <div className='my-4'>
                     <form onSubmit={onSubmitHandler}>
                         <div className='flex flex-col mb-2'>
                             {/* <Tooltip title={temporaryPasswordError.msg} arrow> */}

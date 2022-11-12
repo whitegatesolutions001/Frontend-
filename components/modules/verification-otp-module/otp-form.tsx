@@ -153,16 +153,14 @@ export const OTPForm = () : JSX.Element => {
                     </IconButton>
                 </div>
 
-                <div className='my-24'>
+                <div className='my-20'>
                     <p className='text-4xl font-bold py-2 capitalize'>Verification</p>
                     <p className='text-lg font-semibold pb-4'>Please type in the One-Time password sent to your email</p>
 
-                    {axiosResponse.msg && 
-                        <Alert 
-                            severity={axiosResponse.isError ? "error" : "success"} 
-                            sx={{margin : 0, borderRadius : '10px'}}>{axiosResponse.msg}
-                        </Alert>
-                    }
+                    <Alert 
+                        severity={axiosResponse.isError ? "error" : "success"} 
+                        sx={{margin:0, borderRadius : '10px',visibility : `${axiosResponse.msg ? 'visible' : 'hidden'}`}}>{axiosResponse.msg}
+                    </Alert>
 
                     <form onSubmit={onSubmitHandlerForForgotPassword}>
                     

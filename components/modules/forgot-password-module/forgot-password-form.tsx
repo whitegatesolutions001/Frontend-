@@ -71,13 +71,12 @@ export const ForgotPasswordForm = () : JSX.Element => {
                 <p className='text-4xl font-bold py-2 capitalize'>Forgot your password?</p>
                 <p className='text-lg font-semibold pb-4'>Provide us with your e-mail address</p>
 
-                {axiosResponse.msg && 
                 <Alert 
                     severity={axiosResponse.isError ? "error" : "success"} 
-                    sx={{margin : 0, borderRadius : '10px'}}>{axiosResponse.msg}
-                </Alert>}
+                    sx={{margin:0, borderRadius : '10px',visibility : `${axiosResponse.msg ? 'visible' : 'hidden'}`}}>{axiosResponse.msg}
+                </Alert>
 
-                <div className='my-8'>
+                <div className='my-4'>
 
                     <form onSubmit={onSubmitHandler}>
                         <Tooltip title={emailError.msg} arrow>

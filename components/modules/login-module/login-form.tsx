@@ -120,13 +120,12 @@ export const LoginForm = () : JSX.Element => {
                 <br/>
                 Compliance Assistant</p>
 
-                {axiosResponse.msg && 
                 <Alert 
                     severity={axiosResponse.isError ? "error" : "success"} 
-                    sx={{margin : 0, borderRadius : '10px'}}>{axiosResponse.msg}
-                </Alert>}
+                    sx={{margin:0, borderRadius : '10px',visibility : `${axiosResponse.msg ? 'visible' : 'hidden'}`}}>{axiosResponse.msg}
+                </Alert>
 
-                <div className='my-8'>
+                <div className='my-4'>
                     <form onSubmit={onSubmitHandler}>
                         <div className='flex flex-col mb-2'>
                             <p className='capitalize font-bold text-xs'>Email Address</p>

@@ -143,26 +143,27 @@ export const SignUpForm = () : JSX.Element => {
         });
     }
     useEffect(() => {
-        
+
         if(tempPassword !== personState.password || personState.password !== tempPassword){
             setConfirmPasswordError({...passwordError,msg: "Passwords do not match", isError : true});
         }else{
             setConfirmPasswordError({...passwordError, msg: "", isError : false});
         }
     },[personState,tempPassword]);
-
+    //transition duration-300 delay-200
     return(
         <div className='w-full flex justify-center items-center'>
             <div className='w-4/5 p-4 md:p-8'>
-                <p className='text-4xl font-bold py-6'>Welcome to your 
+                <p className='text-4xl font-bold pt-6 pb-4'>Welcome to your 
                 <br/>
                 Compliance Assistant</p>
-                {axiosResponse.msg && 
+                
                 <Alert 
                     severity={axiosResponse.isError ? "error" : "success"} 
-                    sx={{margin : 0, borderRadius : '10px'}}>{axiosResponse.msg}
-                </Alert>}
-                <div className='my-8'>
+                    sx={{margin :0, borderRadius : '10px',visibility : `${axiosResponse.msg ? 'visible' : 'hidden'}`}}>{axiosResponse.msg}
+                </Alert>
+
+                <div className='mb-8 mt-4'>
                     <form onSubmit={onSignUpFormSubmitHandler}>
                         <div className='flex flex-col mb-2'>
                             <p className='capitalize font-bold text-xs'>First Name</p>
@@ -170,8 +171,7 @@ export const SignUpForm = () : JSX.Element => {
                             className="text-black w-full py-2.5 px-4 rounded-md border border-[#6157A0] text-sm my-3" 
                             required
                             placeholder='Enter your first name'
-                            onChange={(e) =>firstNameOnchangeHandler(e)}
-                            />
+                            onChange={(e) =>firstNameOnchangeHandler(e)}/>
                         </div>
                         <div className='flex flex-col mb-2'>
                             <p className='capitalize font-bold text-xs'>Last Name</p>
@@ -187,7 +187,7 @@ export const SignUpForm = () : JSX.Element => {
                                 <p className='capitalize font-bold text-xs'>Email Address</p>
                                 <input type={"email"} 
                                 className={invalidEmail.isError
-                                    ? "text-[#DC143C] w-full py-2.5 px-4 rounded-md border border-[#DC143C] text-sm mt-3 mb-1"
+                                    ? "text-[#DC143C] w-full py-2.5 px-4 rounded-md border border-[#DC143C] text-sm my-3"
                                     :"text-black w-full py-2.5 px-4 rounded-md border border-[#6157A0] text-sm my-3" }
                                 required
                                 placeholder='Enter your email'
@@ -275,8 +275,8 @@ export const SignUpForm = () : JSX.Element => {
                         <button type={"submit"}
                         disabled={personState.firstName
                             && personState.lastName 
-                            && personState.email
-                            && personState.phoneNumber
+                            && validateEmail(personState.email)
+                            && validatePhoneNumber(personState.phoneNumber)
                             && personState.password
                             && releaseButton.checked
                             && !releaseButton.loader
