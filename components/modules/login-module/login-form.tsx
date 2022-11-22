@@ -7,8 +7,8 @@ import { validateEmail, validatePassword } from '../../../utils/util-functions';
 import { ReactSpinnerLoader } from '../../shared-components/react-spinner-loader';
 import { useRouter, NextRouter} from 'next/router';
 import { Alert, CircularProgress, IconButton } from '@mui/material';
-import RemoveRedEyeRoundedIcon from '@mui/icons-material/RemoveRedEyeRounded';
-import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
+import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 
 const initialState :LoginDetailsInterface = {
     email : '',
@@ -128,13 +128,13 @@ export const LoginForm = () : JSX.Element => {
                 <div className='my-4'>
                     <form onSubmit={onSubmitHandler}>
                         <div className='flex flex-col mb-2'>
-                            <p className='capitalize font-bold text-xs'>Email Address</p>
+                            <p className='capitalize font-bold text-xs'>E-mail Address</p>
                             <input type={"email"} 
                             className={emailError.isError
-                                ?"text-[#DC143C] w-full py-3 px-4 rounded-md border border-[#DC143C] text-sm my-4"
-                                :"text-black w-full py-3 px-4 rounded-md border border-[#6157A0] text-sm my-4" }
+                                ?"text-[#DC143C] w-full py-2.5 px-4 rounded-md border border-[#DC143C] text-sm my-4"
+                                :"text-black w-full py-2.5 px-4 rounded-md border border-[#CBCBCB] text-sm my-4" }
                             required
-                            placeholder='enter your email'
+                            //placeholder='enter your email'
                             onChange={(e) => emailOnchangeHandler(e)}/>
                             {/* {emailError.isError && <span className='text-xs text-[#DC143C]'>{emailError.msg}</span>} */}
                         </div>
@@ -142,19 +142,19 @@ export const LoginForm = () : JSX.Element => {
                         <div className='flex flex-col mb-2'>
                             <p className='capitalize font-bold text-xs'>password</p>
                             <div  className={passwordError.isError
-                                    ? "text-[#DC143C] w-full flex justify-between items-center rounded-md my-4 border border-[#DC143C] text-sm"
-                                    :"text-black w-full rounded-md border border-[#6157A0] text-sm my-4 flex justify-between items-center" }>
+                                    ? "text-[#DC143C] w-full flex justify-between items-center rounded-md mt-4 mb-2 border border-[#DC143C] text-sm"
+                                    :"text-black w-full rounded-md border border-[#CBCBCB] text-sm mt-4 mb-2 flex justify-between items-center" }>
 
                                 <input type={boolStates.viewPassword ? "text" :"password"} 
-                                    className="px-4 py-3 rounded-md w-10/12"
+                                    className="px-4 py-2.5 rounded-md w-10/12"
                                     required
-                                    placeholder='Enter your password'
+                                    //placeholder='Enter your password'
                                     onChange={(e) => setPasswordOnchangeHandler(e)}/>
 
                                 <IconButton onClick={() => setBooleanStates({...boolStates, viewPassword : !boolStates.viewPassword})}>
-                                    {boolStates.viewPassword ? <VisibilityOffRoundedIcon sx={{
+                                    {boolStates.viewPassword ? <VisibilityOffOutlinedIcon sx={{
                                         color : '#000'
-                                    }}/> : <RemoveRedEyeRoundedIcon
+                                    }}/> : <RemoveRedEyeOutlinedIcon
                                     sx={{
                                         color : '#000'
                                     }}/>}
@@ -164,7 +164,7 @@ export const LoginForm = () : JSX.Element => {
                             {/* {passwordError.isError && <span className='text-xs text-[#DC143C]'>{passwordError.msg}</span>} */}
                         </div>
                         
-                        <div className='flex justify-between gap-4 items-center my-4 text-xs font-bold'>
+                        <div className='flex justify-between gap-4 items-center mb-4 text-xs font-bold'>
                             <div className='flex flex-row items-center gap-2'>
                                 <input type={"checkbox"} onChange={(e) => setBooleanStates({...boolStates, rememberMe : e.target.checked})}/>
                                 <span className=''>Remember me</span>
@@ -192,7 +192,7 @@ export const LoginForm = () : JSX.Element => {
                         </button>
                     </form>
 
-                    <div className='text-center p-4 text-sm'>
+                    <div className='text-center p-4 text-xs font-semibold'>
                         <p>Don&apos;t have an account?&nbsp;
                         <Link href={'/signUp'} passHref>
                             <span className='text-[#6157A0] hover:text-blue-500 cursor-pointer font-bold'>Sign-up</span>

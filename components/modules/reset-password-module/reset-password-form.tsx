@@ -5,10 +5,9 @@ import { postAxiosRequest } from '../../../utils/axios-requests';
 import { AxiosRequestInterface, Constants, ErrorInterfaceObj } from '../../../utils/constants';
 import { validatePassword } from '../../../utils/util-functions';
 import { useRouter, NextRouter } from 'next/router';
-import { ReactSpinnerLoader } from '../../shared-components/react-spinner-loader';
-import RemoveRedEyeRoundedIcon from '@mui/icons-material/RemoveRedEyeRounded';
-import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
 import { Alert, CircularProgress, IconButton, Tooltip } from '@mui/material';
+import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 
 
 const initialErrorObj : ErrorInterfaceObj = {
@@ -171,18 +170,18 @@ export const ResetPasswordForm = () : JSX.Element => {
                             {/* <Tooltip title={temporaryPasswordError.msg} arrow> */}
                                 <div className='flex flex-col mb-2'>
                                     <p className='capitalize font-bold text-xs'>Temporary password</p>
-                                    <div  className={"text-black w-full rounded-md border border-[#6157A0] text-sm my-4 flex justify-between items-center" }>
+                                    <div  className={"text-black w-full rounded-md border border-[#CBCBCB] text-sm my-4 flex justify-between items-center" }>
 
                                         <input type={boolStates.viewPrevious ? "text" :"password"} 
-                                            className="px-4 py-3 rounded-md w-10/12"
+                                            className="px-4 py-2.5 rounded-md w-10/12"
                                             required
-                                            placeholder='Enter previous password'
+                                            //placeholder='Enter previous password'
                                             onChange={(e) => onChangeTemporaryPasswordHandler(e)}/>
 
                                         <IconButton onClick={() => setBooleanStates({...boolStates, viewPrevious : !boolStates.viewPrevious})}>
-                                            {boolStates.viewPrevious ? <VisibilityOffRoundedIcon sx={{
+                                            {boolStates.viewPrevious ? <VisibilityOffOutlinedIcon sx={{
                                                 color : '#000'
-                                            }}/> : <RemoveRedEyeRoundedIcon
+                                            }}/> : <RemoveRedEyeOutlinedIcon
                                             sx={{
                                                 color : '#000'
                                             }}/>}
@@ -207,18 +206,18 @@ export const ResetPasswordForm = () : JSX.Element => {
                                     <p className='capitalize font-bold text-xs'>New password</p>
                                     <div  className={newPassword.isError
                                             ? "text-[#DC143C] w-full flex justify-between items-center rounded-md my-4 border border-[#DC143C] text-sm"
-                                            :"text-black w-full rounded-md border border-[#6157A0] text-sm my-4 flex justify-between items-center" }>
+                                            :"text-black w-full rounded-md border border-[#CBCBCB] text-sm my-4 flex justify-between items-center" }>
 
                                         <input type={boolStates.viewNewPassword ? "text" :"password"} 
-                                            className="px-4 py-3 rounded-md w-10/12"
+                                            className="px-4 py-2.5 rounded-md w-10/12"
                                             required
-                                            placeholder='Enter New Password'
+                                            //placeholder='Enter New Password'
                                             onChange={(e) => onChangeNewPasswordHandler(e)}/>
 
                                         <IconButton onClick={() => setBooleanStates({...boolStates, viewNewPassword : !boolStates.viewNewPassword})}>
-                                            {boolStates.viewNewPassword ? <VisibilityOffRoundedIcon sx={{
+                                            {boolStates.viewNewPassword ? <VisibilityOffOutlinedIcon sx={{
                                                 color : '#000'
-                                            }}/> : <RemoveRedEyeRoundedIcon
+                                            }}/> : <RemoveRedEyeOutlinedIcon
                                             sx={{
                                                 color : '#000'
                                             }}/>}
@@ -244,18 +243,18 @@ export const ResetPasswordForm = () : JSX.Element => {
                                     <p className='capitalize font-bold text-xs'>Confirm password</p>
                                     <div  className={confirmPassword.isError
                                             ? "text-[#DC143C] w-full flex justify-between items-center rounded-md my-4 border border-[#DC143C] text-sm"
-                                            :"text-black w-full rounded-md border border-[#6157A0] text-sm my-4 flex justify-between items-center" }>
+                                            :"text-black w-full rounded-md border border-[#CBCBCB] text-sm my-4 flex justify-between items-center" }>
 
                                         <input type={boolStates.viewConfirmPassword ? "text" :"password"} 
-                                            className="px-4 py-3 rounded-md w-10/12"
+                                            className="px-4 py-2.5 rounded-md w-10/12"
                                             required
-                                            placeholder='Confirm New Password'
+                                            //placeholder='Confirm New Password'
                                             onChange={(e) => onChangeConfirmPassword(e)}/>
 
                                         <IconButton onClick={() => setBooleanStates({...boolStates, viewConfirmPassword : !boolStates.viewConfirmPassword})}>
-                                            {boolStates.viewConfirmPassword ? <VisibilityOffRoundedIcon sx={{
+                                            {boolStates.viewConfirmPassword ? <VisibilityOffOutlinedIcon sx={{
                                                 color : '#000'
-                                            }}/> : <RemoveRedEyeRoundedIcon
+                                            }}/> : <RemoveRedEyeOutlinedIcon
                                             sx={{
                                                 color : '#000'
                                             }}/>}
@@ -301,7 +300,7 @@ export const ResetPasswordForm = () : JSX.Element => {
                         /> */}
                     </form>
 
-                    <div className='text-center p-4 text-sm'>
+                    <div className='text-center p-4 text-xs font-semibold'>
                         <p>Do you remember your password?&nbsp;
                         <Link href={'/login'} passHref>
                             <span className='text-[#6157A0] hover:text-blue-500 cursor-pointer font-bold'>Log&nbsp;In</span>

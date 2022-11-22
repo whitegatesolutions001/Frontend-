@@ -81,13 +81,13 @@ export const ForgotPasswordForm = () : JSX.Element => {
                     <form onSubmit={onSubmitHandler}>
                         <Tooltip title={emailError.msg} arrow>
                             <div className='flex flex-col mb-2'>
-                                <p className='capitalize font-bold text-xs'>Email Address</p>
+                                <p className='capitalize font-bold text-xs'>E-mail Address</p>
                                 <input type={"email"} 
                                 className={emailError.isError 
-                                    ? "text-[#DC143C] w-full py-3 px-4 rounded-md border border-[#DC143C] text-sm my-4"
-                                    :"w-full py-3 px-4 rounded-md border border-[#6157A0] text-sm my-4" }
+                                    ? "text-[#DC143C] w-full py-2.5 px-4 rounded-md border border-[#DC143C] text-sm my-4"
+                                    :"w-full py-2.5 px-4 rounded-md border border-[#CBCBCB] text-sm my-4" }
                                 required
-                                placeholder='Enter your Email'
+                               // placeholder='Enter your Email'
                                 onChange={(e) => emailOnchangeHandler(e)}
                                 />
                                 {/* {emailError.isError && <span className='text-xs text-[#DC143C]'>{emailError.msg}</span>} */}
@@ -115,7 +115,7 @@ export const ForgotPasswordForm = () : JSX.Element => {
                         </button>
                     </form>
 
-                    <div className='text-center p-4 text-sm'>
+                    <div className='text-center p-4 text-xs font-semibold'>
                         <p>Do you remember your password?&nbsp;
                         <Link href={'/login'} passHref>
                             <span className='text-[#6157A0] hover:text-blue-500 cursor-pointer font-bold'>Log&nbsp;In</span>

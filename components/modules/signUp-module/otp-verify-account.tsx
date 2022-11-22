@@ -198,7 +198,7 @@ export const SignUpOtpComponent = () : JSX.Element => {
                         </button>
                     </form>
 
-                    <div className='text-center p-4 text-sm'>
+                    <div className='text-center p-4 text-xs font-semibold'>
                         <p>Did&apos;nt get a One-Time password?&nbsp;
                         <button className='text-[#6157A0] font-bold border-none hover:text-blue-500' onClick={onClickResendOTPHandler}>
                             <span>ResendOTP</span>

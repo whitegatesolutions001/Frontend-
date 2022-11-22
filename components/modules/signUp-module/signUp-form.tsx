@@ -6,8 +6,8 @@ import { AxiosRequestInterface, Constants, ErrorInterfaceObj, SignPersonInterfac
 import { validateEmail, validatePassword, validatePhoneNumber } from '../../../utils/util-functions';
 import { ReactSpinnerLoader } from '../../shared-components/react-spinner-loader';
 import { useRouter, NextRouter } from 'next/router';
-import RemoveRedEyeRoundedIcon from '@mui/icons-material/RemoveRedEyeRounded';
-import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
+import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import { Alert, CircularProgress, IconButton, Tooltip } from '@mui/material';
 
 
@@ -168,17 +168,17 @@ export const SignUpForm = () : JSX.Element => {
                         <div className='flex flex-col mb-2'>
                             <p className='capitalize font-bold text-xs'>First Name</p>
                             <input type={"text"} 
-                            className="text-black w-full py-2.5 px-4 rounded-md border border-[#6157A0] text-sm my-3" 
+                            className="text-black w-full py-2.5 px-4 rounded-md border border-[#CBCBCB] text-sm my-3" 
                             required
-                            placeholder='Enter your first name'
+                            //placeholder='Enter your first name'
                             onChange={(e) =>firstNameOnchangeHandler(e)}/>
                         </div>
                         <div className='flex flex-col mb-2'>
                             <p className='capitalize font-bold text-xs'>Last Name</p>
                             <input type={"text"} 
-                            className="text-black w-full py-2.5 px-4 rounded-md border border-[#6157A0] text-sm my-3" 
+                            className="text-black w-full py-2.5 px-4 rounded-md border border-[#CBCBCB] text-sm my-3" 
                             required
-                            placeholder='Enter your last name'
+                            //placeholder='Enter your last name'
                             onChange={(e) => lastNameOnchangeHandler(e)}/>
                         </div>
 
@@ -188,9 +188,9 @@ export const SignUpForm = () : JSX.Element => {
                                 <input type={"email"} 
                                 className={invalidEmail.isError
                                     ? "text-[#DC143C] w-full py-2.5 px-4 rounded-md border border-[#DC143C] text-sm my-3"
-                                    :"text-black w-full py-2.5 px-4 rounded-md border border-[#6157A0] text-sm my-3" }
+                                    :"text-black w-full py-2.5 px-4 rounded-md border border-[#CBCBCB] text-sm my-3" }
                                 required
-                                placeholder='Enter your email'
+                                //placeholder='Enter your email'
                                 onChange={(e) => emailOnchangeHandler(e)}/>
                                 {/* {invalidEmail.isError && <span className='text-xs text-[#DC143C]'>{invalidEmail.msg}</span>} */}
                             </div>
@@ -202,10 +202,10 @@ export const SignUpForm = () : JSX.Element => {
                                 <input type={"text"} 
                                 className={phoneError.isError
                                     ?"text-[#DC143C] w-full py-2.5 px-4 rounded-md border border-[#DC143C] text-sm my-3"
-                                    :"text-black w-full py-2.5 px-4 rounded-md border border-[#6157A0] text-sm my-3" }
+                                    :"text-black w-full py-2.5 px-4 rounded-md border border-[#CBCBCB] text-sm my-3" }
                                 required
                                 maxLength={11}
-                                placeholder='Enter your phone number'
+                                //placeholder='Enter your phone number'
                                 onChange={(e) => phoneNumberOnChangeHandler(e)}/>
                                 {/* {phoneError.isError && <span className='text-xs text-[#DC143C]'>{phoneError.msg}</span>} */}
                             </div>
@@ -216,18 +216,18 @@ export const SignUpForm = () : JSX.Element => {
                                 <p className='capitalize font-bold text-xs'>set password</p>
                                 <div  className={passwordError.isError
                                         ? "text-[#DC143C] w-full flex justify-between items-center rounded-md my-4 border border-[#DC143C] text-sm"
-                                        :"text-black w-full rounded-md border border-[#6157A0] text-sm my-4 flex justify-between items-center" }>
+                                        :"text-black w-full rounded-md border border-[#CBCBCB] text-sm my-4 flex justify-between items-center" }>
 
                                     <input type={boolStates.viewPassword ? "text" :"password"} 
-                                        className="px-4 py-3 rounded-md w-10/12"
+                                        className="px-4 py-2.5 rounded-md w-10/12"
                                         required
-                                        placeholder='Set your Password'
+                                       // placeholder='Set your Password'
                                         onChange={(e) => setPasswordOnchangeHandler(e)}/>
 
                                     <IconButton onClick={() => setBooleanStates({...boolStates, viewPassword : !boolStates.viewPassword})}>
-                                        {boolStates.viewPassword ? <VisibilityOffRoundedIcon sx={{
+                                        {boolStates.viewPassword ? <VisibilityOffOutlinedIcon sx={{
                                             color : '#000'
-                                        }}/> : <RemoveRedEyeRoundedIcon
+                                        }}/> : <RemoveRedEyeOutlinedIcon
                                         sx={{
                                             color : '#000'
                                         }}/>}
@@ -243,18 +243,18 @@ export const SignUpForm = () : JSX.Element => {
                                 <p className='capitalize font-bold text-xs'>confirm password</p>
                                 <div  className={confirmPasswordError.isError
                                         ? "text-[#DC143C] w-full flex justify-between items-center rounded-md my-4 border border-[#DC143C] text-sm"
-                                        :"text-black w-full rounded-md border border-[#6157A0] text-sm my-4 flex justify-between items-center" }>
+                                        :"text-black w-full rounded-md border border-[#CBCBCB] text-sm my-4 flex justify-between items-center" }>
 
                                     <input type={boolStates.viewConfirmPassword ? "text" :"password"} 
-                                        className="px-4 py-3 rounded-md w-10/12"
+                                        className="px-4 py-2.5 rounded-md w-10/12"
                                         required
-                                        placeholder='Confirm set password'
+                                        //placeholder='Confirm set password'
                                         onChange={(e) => confirmPasswordOnchangeHandler(e)}/>
 
                                     <IconButton onClick={() => setBooleanStates({...boolStates, viewConfirmPassword : !boolStates.viewConfirmPassword})}>
-                                        {boolStates.viewConfirmPassword ? <VisibilityOffRoundedIcon sx={{
+                                        {boolStates.viewConfirmPassword ? <VisibilityOffOutlinedIcon sx={{
                                             color : '#000'
-                                        }}/> : <RemoveRedEyeRoundedIcon
+                                        }}/> : <RemoveRedEyeOutlinedIcon
                                         sx={{
                                             color : '#000'
                                         }}/>}
@@ -305,7 +305,7 @@ export const SignUpForm = () : JSX.Element => {
                         /> */}
                     </form>
 
-                    <div className='text-center text-sm'>
+                    <div className='text-center text-xs font-semibold'>
                         <p>Already have an account?&nbsp;
                         <Link href={'/login'} passHref>
                             <span className='text-[#6157A0] hover:text-blue-500 cursor-pointer font-bold'>Login</span>
