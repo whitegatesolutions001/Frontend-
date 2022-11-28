@@ -92,7 +92,9 @@ export const LoginForm = () : JSX.Element => {
                     // setTimeout(() => {
                     //     setAxiosResponse({...axiosResponse, msg : "", isError : false});
                     // },4000);
-                    //router.push('/view-status');
+                    setTimeout(() => {
+                        router.push('/new-registration');
+                    },3000);
                 }
                
             }

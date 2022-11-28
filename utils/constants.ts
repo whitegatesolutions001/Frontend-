@@ -30,3 +30,10 @@ export interface AxiosRequestInterface{
     uri : string;
     body ?: any;
 }
+
+export interface BusinessesGridInterface{
+    image : string;
+    title : string;
+    description : string;
+    link : string;
+}

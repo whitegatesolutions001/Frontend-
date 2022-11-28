@@ -118,10 +118,15 @@ export const SignUpForm = () : JSX.Element => {
                     //display successful message, then proceed to new registration
                     localStorage.setItem('token',token);
                     localStorage.setItem('userId', userId);
+                    localStorage.setItem('tokenInitializationDate',tokenInitializationDate);
+                    localStorage.setItem('tokenExpiryDate',tokenExpiryDate);
                     setButtonRelease({...releaseButton, loader : false});
                     //alert(message);
                     //store token and co inside localHost
                     setAxiosResponse({...axiosResponse, msg : message, isError: false});
+                    setTimeout(() => {
+                        router.push('/new-registration');
+                    },3000);
                     //router.push('/verify-account');
                 }
             }
