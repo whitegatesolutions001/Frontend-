@@ -2,7 +2,7 @@ import React from 'react';
 
 export const NameRegistrationFormComponent = () : JSX.Element => {
     return(
-        <div className="w-full md:w-11/12 lg:w-10/12">
+        <div className="w-full lg:w-10/12">
             <p className='text-[#6157A0] text-xl font-bold'>Name Registration</p>
 
             <form className='my-8'>

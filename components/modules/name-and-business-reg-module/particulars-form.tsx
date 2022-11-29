@@ -5,7 +5,7 @@ import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 
 export const BusinessRegistrationParticularsForm = () : JSX.Element => {
     return(
-        <div className="w-full md:w-11/12 lg:w-10/12">
+        <div className="w-full lg:w-10/12">
             <form className='my-8'>
             <p className='text-[#6157A0] text-xl font-bold py-4'>Particulars</p>
 
