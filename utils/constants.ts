@@ -37,3 +37,16 @@ export interface BusinessesGridInterface{
     description : string;
     link : string;
 }
+
+export interface SideBarElementValuesInterface{
+    icon : any;
+    link : string;
+    title : string;
+}
+
+export type SidebarElementValuesObject={
+    firstName ?: string,
+    lastName ?: string,
+    image ?: string,
+    body : SideBarElementValuesInterface[]
+}
