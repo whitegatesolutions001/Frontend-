@@ -14,7 +14,7 @@ const NameReservationAndBusinessRegistrationLayout : FC<Props> = ({children}) : 
                 <SideBarNavigation values={returnValues()}/>
                 <main className="flex-1 bg-white text-black">
                     <DashboardTopBar pageTitle="Business Name Registration" showControls={true}/>
-                    <div className="w-full flex justify-center lg:justify-start lg:ml-8">
+                    <div className="w-full flex justify-center lg:justify-start lg:ml-8 p-4">
                         {children}
                     </div>
                 </main>
