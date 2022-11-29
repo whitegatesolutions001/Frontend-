@@ -170,11 +170,11 @@ export const BusinessRegistrationParticularsForm = () : JSX.Element => {
                 </div>
                <section className='grid  md:grid-cols-2 gap-2 my-8'>
                     <div className='text-sm flex flex-col md:flex-row items-center gap-2 w-auto'>
-                        <button className='w-full md:w-fit text-white flex justify-center md:justify-around font-semibold gap-1 bg-[#6157A0] rounded-lg outline-none px-4 py-2'>
+                        <button className='w-full md:w-fit text-white flex justify-center md:justify-around font-semibold gap-y-4 bg-[#6157A0] rounded-lg outline-none px-4 py-2'>
                             <ControlPointRoundedIcon sx={{fontSize : '18px'}}/>
                             Add&nbsp;Individual&nbsp;Business&nbsp;Owner
                         </button> 
-                        <button className='w-full md:w-fit text-[#6157A0] flex justify-center md:justify-around font-semibold rounded-lg px-4 py-2 gap-1 bg-white border border-[#6157A0] outline-none'>
+                        <button className='w-full md:w-fit text-[#6157A0] flex justify-center md:justify-around font-semibold rounded-lg px-4 py-2 gap-y-4 bg-white border border-[#6157A0] outline-none'>
                             <ControlPointRoundedIcon sx={{fontSize : '18px'}}/>
                             Add&nbsp;Cooperate&nbsp;Business&nbsp;Owner
                         </button>
