@@ -55,6 +55,26 @@ input:focus{
   outline: none !important;
 }
 
+input[type="text"]:hover{
+  border: 1px solid#000;
+}
+input[type="text"]:focus{
+  border: 1px solid#1976D2;
+}
+
+input[type="email"]:hover{
+  border: 1px solid#000;
+}
+input[type="email"]:focus{
+  border: 1px solid#1976D2;
+}
+
+input[type="search"]:hover{
+  border: 1px solid#000;
+}
+input[type="search"]:focus{
+  border: 1px solid#1976D2;
+}
 /* .backgroundDiv{
   background-image: url("https://images.pexels.com/photos/4427622/pexels-photo-4427622.jpeg?auto=compress&cs=tinysrgb&h=650&w=940");
   width: 50%;
