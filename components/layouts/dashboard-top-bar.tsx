@@ -1,10 +1,19 @@
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
-import { Avatar, IconButton } from "@mui/material";
+import { Avatar, Badge, IconButton } from "@mui/material";
 import SortOutlinedIcon from '@mui/icons-material/SortOutlined';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 import {NextRouter, useRouter} from 'next/router';
 import {FC} from 'react';
+import { makeStyles } from '@mui/styles';
+
+
+const useStyles = makeStyles((theme : any) => ({
+    customBadge: {
+        backgroundColor: '#FF2D2D',
+        color: "white"
+    }
+}));
 
 type Props={
     pageTitle : string;
@@ -13,7 +22,9 @@ type Props={
 
 export const DashboardTopBar :FC<Props> = ({pageTitle, showControls = true}) => {
     const router : NextRouter = useRouter();
-    
+
+    const styles = useStyles();
+
     const logoutHandler = () => {
         localStorage.clear();
         router.replace('/login');
@@ -31,7 +42,7 @@ export const DashboardTopBar :FC<Props> = ({pageTitle, showControls = true}) => 
                         </div>
                     </section>
                     {showControls && 
-                        <section className="flex flex-row items-center">
+                        <section className="flex flex-row items-center gap-1">
                             <div className='flex lg:hidden'>
                                 <Avatar src="/static-img.png"/>
                             </div>
@@ -41,17 +52,25 @@ export const DashboardTopBar :FC<Props> = ({pageTitle, showControls = true}) => 
                                     fontSize : '22px',
                                     background : '#F0EEF6',
                                     borderRadius : '100%',
-                                    padding : '1px'
+                                    padding : '2px'
                                 }}/>
                             </IconButton>
                             <IconButton>
-                                <NotificationsOutlinedIcon sx={{
-                                    color : '#000',
-                                    fontSize : '22px',
-                                    background : '#F0EEF6',
-                                    borderRadius : '100%',
-                                    padding : '1px'
-                                }}/>
+                                <Badge badgeContent="99" 
+                                classes={{badge : styles.customBadge}}
+                                variant="dot" color="error"
+                                anchorOrigin={{
+                                    vertical : 'bottom',
+                                    horizontal : 'right'
+                                }}>
+                                    <NotificationsOutlinedIcon sx={{
+                                        color : '#000',
+                                        fontSize : '22px',
+                                        background : '#F0EEF6',
+                                        borderRadius : '100%',
+                                        padding : '2px'
+                                    }}/>
+                                </Badge>
                             </IconButton>
 
                             <button className="px-3 py-2.5 bg-[#FF2D2D] text-xs font-semibold text-white outline-none rounded-lg

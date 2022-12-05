@@ -1,4 +1,4 @@
-import { BusinessesGridInterface, SidebarElementValuesObject } from "./constants";
+import { BusinessesGridInterface, BusinessRegParticularsInterface, SidebarElementValuesObject } from "./constants";
 
 export const ListOfBusinessesCollectionsForNewRegistration : Array<BusinessesGridInterface> = [
     {
@@ -38,3 +38,23 @@ export const ListOfBusinessesCollectionsForNewRegistration : Array<BusinessesGri
         link : '/new-registration/incorporated-trustees'
     }
 ];
+
+export const businessRegObjInstance :BusinessRegParticularsInterface ={
+    id : 0,
+    firstName : "",
+    lastName : "",
+    otherName : "",
+    residentialAddress : "",
+    state : "",
+    lga : "",
+    city : "",
+    occupation : "",
+    nationality : "",
+    dob : "",
+    email : "",
+    telephoneNumber : "",
+    signature : "",
+    passport : "",
+    meansOfId : "",
+    certificate : ""
+}

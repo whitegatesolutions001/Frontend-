@@ -50,3 +50,23 @@ export type SidebarElementValuesObject={
     image ?: string,
     body : SideBarElementValuesInterface[]
 }
+
+export interface BusinessRegParticularsInterface{
+    id ?: number;
+    firstName : string;
+    lastName : string;
+    otherName ?: string;
+    residentialAddress : string;
+    state : string;
+    lga : string;
+    city : string;
+    occupation : string;
+    nationality : string;
+    dob : string;
+    email : string;
+    telephoneNumber : string;
+    signature : File | string;
+    passport : File | string;
+    meansOfId : File | string;
+    certificate : File | string;
+}
